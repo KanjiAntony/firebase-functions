@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800&amp;display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <link href="css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/vendor/plugins.min.css">
+        <link rel="stylesheet" href="assets/css/style.min.css">
+        <link rel="stylesheet" href="assets/css/responsive.min.css">
+  <title>Amazing Online Store.</title>
+</head>
+
+<body>
+
+  <!-- Header Start -->
+  <header class="main-header">
+    <!-- Header Top Start -->
+    <div class="header-top-nav">
+        <div class="container-fluid">
+            <div class="row">
+                <!--Left Start-->
+                <div class="col-lg-4 col-md-4">
+                    <div class="left-text">
+                        <p>Welcome you to Mayu's Grocery!</p>
+                    </div>
+                </div>
+                <!--Left End-->
+                <!--Right Start-->
+                <div class="col-lg-8 col-md-8 text-right">
+                    <div class="header-right-nav">
+                        <div class="dropdown-navs">
+                            <ul>
+                                <!-- Settings Start -->
+                                <li class="dropdown xs-after-n">
+                                    <a class="angle-icon" href="#">My account</a>
+                                    <ul class="dropdown-nav">
+                                        <li><a href="">Login</a></li>
+                                    </ul>
+                                </li>
+                                <!-- Settings End -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--Right End-->
+            </div>
+        </div>
+    </div>
+    <!-- Header Top End -->
+    <!-- Header Buttom Start -->
+    <div class="header-navigation sticky-nav">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Logo Start -->
+                <div class="col-md-2 col-sm-2">
+                    <div class="logo">
+                        <a href=""><img src="assets/images/logo/logo.png" alt="" /></a>
+                    </div>
+                </div>
+                <!-- Logo End -->
+                <!-- Navigation Start -->
+                <div class="col-md-10 col-sm-10">
+                    
+                    <!--Header Bottom Account Start -->
+                    <div class="header_account_area">
+                        <!--Seach Area Start -->
+                        <div class="header_account_list search_list">
+                            <a href="javascript:void(0)"><i class="ion-ios-search-strong"></i></a>
+                            <div class="dropdown_search">
+                                <form action="" method="get" target="_blank">
+                                    <input placeholder="Search entire store here ..." type="text" name="p" />
+                                    <button type="submit" name="search"><i class="ion-ios-search-strong"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                        <!--Seach Area End -->
+
+                        <!--Cart info Start -->
+                        <div class="cart-info d-flex">
+                            <div class="mini-cart-warp">
+                                <button id="menu-cart" class="cart" style="text-decoration:none; color:#4fb68d;">
+                                  <span><i class="fa fa-shopping-cart" ></i> <strong>(<span id="menu-cart-item-count">0</span>)</strong></span>
+                                  </button>
+                            </div>
+                            
+                            
+                        </div>
+                        <!--Cart info End -->
+                    </div>
+                </div>
+            </div>
+            <!-- mobile menu -->
+            <div class="mobile-menu-area">
+                <div class="mobile-menu">
+                    <nav id="mobile-menu-active">
+                        <ul class="menu-overflow">
+                            <li>
+                                <a href="">HOME</a>
+                            </li>
+                            <li><a href="">Contact Us</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- mobile menu end-->
+        </div>
+    </div>
+    <!--Header Bottom Account End -->
+</header>
+<!-- Header End -->
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light main-navigation">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item modal-preauth">
+            <button id="menu-signin" class="btn btn-outline-danger" data-bs-toggle="modal"
+              data-bs-target="#modal-signin">Sign
+              In/ Sign Up</button>
+          </li>
+          <li class="nav-item ">
+            <button id="menu-home" class="btn btn-outline-primary">Home</button>
+          </li>
+          <li class="nav-item modal-postauth">
+            <button id="menu-purchases" class="btn btn-outline-primary">Purchase</button>
+          </li>
+          <li class="nav-item modal-postauth">
+            <button id="menu-my-products" class="btn btn-outline-primary">My products</button>
+          </li>
+          <li class="nav-item modal-postauth menu-dropdown">
+            <!-- <a id="menu-categories menu-dropdown" class="btn btn-outline-primary">Categories</button> -->
+              <a href="#" id="menu-categories menu-dropdown" class="btn btn-outline-primary">Categories <i class="ion-ios-arrow-down"></i></a>
+
+            <ul class="mega-menu-wrap">
+              <li>
+                  <ul>
+                      <li>
+                          <div class="sidebar-widget-list-left">
+                              <a href=""><span class="checkmark black"></span> Vegetables</a>
+                          </div>
+                      </li>
+                      
+                      <li>
+                          <div class="sidebar-widget-list-left">
+                              <a href=""><span class="checkmark black"></span> Fruits</a>
+                          </div>
+                      </li>
+                      
+                    
+                  </ul>
+              </li>
+          </ul>
+
+          </li>
+          <li class="nav-item modal-postauth">
+            <button id="menu-signout" class="btn btn-outline-danger">Sign Out</button>
+          </li>
+        </ul>
+        <!-- <button id="menu-cart" class="btn btn-outline-success modal-postauth">
+          <img src="images/download.png" width="30px"> (<span id="menu-cart-item-count">0</span>)
+        </button> -->
+        <button id="menu-profile" class="btn btn-outline-success modal-postauth">Profile</button>
+      </div>
+    </div>
+    </div>
+  </nav>
+
+  <!-- Modal :Popup Info Box-->
+  <div class="modal fade" id="modal-infobox" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="modal-infobox-title" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal-infobox-title"></h5>
+        </div>
+        <div class="modal-body" id="modal-infobox-body"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modalsign-in-->
+  <div class="modal fade" id="modal-signin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="modal-signin-title" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal-signin-title">Please, Sign In!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="form-signin" method="post">
+            <div>
+              <input type="email" name="email" placeholder="enter email address">
+            </div>
+            <div>
+              <input type="password" name="password" placeholder="Enter password">
+            </div>
+            <div>
+              <button class="btn btn-outline-primary" type="submit">Sign In</button>
+            </div>
+          </form>
+          <div class="mt-5">
+            No account yet?
+            <button id="button-show-signup-modal" class="btn btn-outline-info">Create New Account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal - Sign Up -->
+  <div class="modal fade" id="modal-signup" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="modal-signup-title" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal-signup-title">Create New Account</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="modal-signup-form" method="post">
+            <div>
+              <input type="email" name="email" placeholder="email address" required>
+            </div>
+            <div>
+              <input type="password" name="password" placeholder="password" required minlength="6">
+            </div>
+            <div>
+              <input type="password" name="passwordConfirm" placeholder="confirm password" required minlength="6">
+            </div>
+            <button type="submit" class="btn btn-outline-primary">Create</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal - Transaction - purchase history -->
+  <div class="modal fade" id="modal-transaction" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="modal-transaction-title" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal-transaction-title"></h5>
+        </div>
+        <div class="modal-body" id="modal-transaction-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="root" class="bg-light p-5 m-3"></div>
+
+  <!-- Footer Area start -->
+  <footer class="footer-area">
+    <div class="footer-top">
+        <div class="container">
+            <div class="row">
+                <!-- footer single wedget -->
+                <div class="col-md-6 col-lg-4">
+                    <!-- footer logo -->
+                    <div class="footer-logo">
+                        <a href="index.php"><img src="assets/images/logo/logo.png" alt="" /></a>
+                    </div>
+                    <!-- footer logo -->
+                    <div class="about-footer">
+                        <p>
+                                <span>
+                                  MAYU’S READYMADE FOOD AND GROCERIES STORE<br>
+
+                              <a href="">info@mayufood.store</a>
+                                </span>
+                            </p>
+                        
+                    </div>
+                </div>
+                <!-- footer single wedget -->
+                <div class="col-md-3 col-lg-2 mt-res-sx-30px mt-res-md-30px">
+                    <div class="single-wedge">
+                        <h4 class="footer-herading">Information</h4>
+                        <div class="footer-links">
+                            <ul>
+                                <li><a href="">Delivery</a></li>
+                                <li><a href="">About Us</a></li>
+                                <li><a href="">Contact Us</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- footer single wedget -->
+                <div class="col-md-3 col-lg-2 mt-res-md-50px mt-res-sx-30px mt-res-md-30px">
+                    <div class="single-wedge">
+                        <h4 class="footer-herading">Custom Links</h4>
+                        <div class="footer-links">
+                            <ul>
+                                <li><a href="">Terms and conditions</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- footer single wedget -->
+                <div class="col-md-3 col-lg-2 mt-res-md-50px mt-res-sx-30px mt-res-md-30px">
+                    <div class="single-wedge">
+                        <div class="social-info">
+                            <ul>
+                                <li>
+                                    <a href="https://www.facebook.com/" target="_blank"><i class="ion-social-facebook"></i></a>
+                                </li>
+                                <li>
+                                    <a href="" target="_blank"><i class="ion-social-instagram"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- footer single wedget -->
+            </div>
+        </div>
+    </div>
+    <!--  Footer Bottom Area start -->
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-lg-4">
+                    <p class="copy-text">Copyright © <a href=""> MAYU’S STORE</a>. All Rights Reserved</p>
+                </div>
+                <div class="col-md-6 col-lg-8">
+                    <img class="payment-img" src="assets/images/icons/payment.png" alt="" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  Footer Bottom Area End-->
+</footer>
+<!--  Footer Area End -->
+	
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js";
+    /*const firebaseConfig = {
+      apiKey: "AIzaSyBsR8OL9stvdOmQZW4N6EDQuT3f7wZ1DXs",
+      authDomain: "cmsc5373-ramya-webserver.firebaseapp.com",
+      projectId: "cmsc5373-ramya-webserver",
+      storageBucket: "cmsc5373-ramya-webserver.appspot.com",
+      messagingSenderId: "100683780950",
+      appId: "1:100683780950:web:061ac1072db47ee29ffcf7"
+    };*/
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAXT9zPMKtretOdqph7xCUS8oeMsNTcZAQ",
+      authDomain: "kanji-functions.firebaseapp.com",
+      projectId: "kanji-functions",
+      storageBucket: "kanji-functions.appspot.com",
+      messagingSenderId: "137802058635",
+      appId: "1:137802058635:web:2897b394fc76d73f79bd8e"
+    };
+
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+  </script>
+
+
+  <script type="module" src="app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
