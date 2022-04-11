@@ -1,7 +1,7 @@
 import { MENU, root } from './elements.js';
 import { ROUTE_PATHNAMES } from '../controller/route.js';
 import * as Util from './util.js';
-import { getSpecificProduct,updateProduct } from '../controller/firestore_controller.js';
+import { getSpecificProduct,updateProduct,deleteProduct } from '../controller/firestore_controller.js';
 import { DEV } from '../model/constants.js';
 import { currentUser } from '../controller/firebase_auth.js';
 import { cart } from './cart_page.js';
@@ -65,6 +65,20 @@ export async function edit_my_products_page() {
 
     });
 
+    document.getElementById("delete_product").addEventListener("click", async e=> {
+
+        try {
+            await deleteProduct(c);
+            Util.info('Success', 'Product deleted!');
+            history.pushState(null,null,ROUTE_PATHNAMES.MY_PRODUCTS);
+            await my_products_page();
+        } catch (e) {
+            if (DEV) console.log(e);
+            Util.info('Delete Product Error', JSON.stringify(e));
+        }
+
+    });
+
 }
 
 function editProductForm(product) {
@@ -109,7 +123,13 @@ function editProductForm(product) {
     
     <p><input type="submit" value="Update Product" name="submit_product" class="btn btn-primary" ></p>
 
+    <br/>
+
+    
+
 </form>
+
+<p><button id="delete_product" class="btn btn-danger" >Delete Product</button></p>
 
     `;
 

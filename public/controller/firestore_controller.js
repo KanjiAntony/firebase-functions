@@ -1,5 +1,5 @@
 import {
-    getFirestore, query, collection, orderBy, getDocs, addDoc, where, doc, getDoc, setDoc, updateDoc,
+    getFirestore, query, collection, orderBy, getDocs, addDoc, where, doc, getDoc, setDoc, updateDoc, deleteDoc,
 } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js"
 import { AccountInfo } from "../model/account_info.js";
 
@@ -26,6 +26,11 @@ export async function getProductList() {
 export async function updateProduct(product, prod_id) {
     const docRef = doc(db, COLLECTION_NAMES.PRODUCT, prod_id);
     await updateDoc(docRef, product);
+}
+
+export async function deleteProduct(prod_id) {
+    const docRef = doc(db, COLLECTION_NAMES.PRODUCT, prod_id);
+    await deleteDoc(docRef);
 }
 
 export async function createProduct(product) {
