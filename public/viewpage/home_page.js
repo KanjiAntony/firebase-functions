@@ -76,7 +76,7 @@ export async function home_page() {
 function buildProductView(product, index) {
     return `
     <div id="card-${product.docId}" class="card d-inline-flex product_card" style="width: 18rem; display: inline-block;">
-        <a href="product.html?id=${product.docId}">
+        <a href="product?id=${product.docId}">
         <img src="${product.imageURL}" class="card-img-top">
         <div class="card-body">
             <h5 class="card-title">${product.name}</h5>

@@ -62,6 +62,7 @@ export async function my_products_page() {
                 try {
                     await createProduct(product);
                     Util.info('Success', 'Product created!');
+                    await my_products_page();
                 } catch (e) {
                     if (DEV) console.log(e);
                     Util.info('Create Product Error', JSON.stringify(e));

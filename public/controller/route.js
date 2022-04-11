@@ -8,7 +8,7 @@ import { edit_my_products_page } from "../viewpage/edit_my_products_page.js"
 
 export const ROUTE_PATHNAMES = {
     HOME: '/',
-    PRODUCT: '/product.html',
+    PRODUCT: '/product',
     PURCHASES: '/purchases',
     PROFILE: '/profile',
     CART: '/cart',
