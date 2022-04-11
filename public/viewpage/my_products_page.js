@@ -55,8 +55,6 @@ export async function my_products_page() {
             product.summary = e.target.product_desc.value.trim();
             product.imageURL = e.target.product_image.value.trim();
             product.qty = e.target.product_stock.value.trim();
-
-            //console.log(comment);
             
 
             if (Object.keys(product).length > 0) {
@@ -127,7 +125,7 @@ function uploadProductForm() {
 function buildProductView(product, index) {
     return `
     <div id="card-${product.docId}" class="card d-inline-flex product_card" style="width: 18rem; display: inline-block;">
-        <a href="product.html?id=${product.docId}">
+        <a href="edit-my-product?id=${product.docId}">
         <img src="${product.imageURL}" class="card-img-top">
         <div class="card-body">
             <h5 class="card-title">${product.name}</h5>

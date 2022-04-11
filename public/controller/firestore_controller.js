@@ -23,6 +23,10 @@ export async function getProductList() {
     return products;
 }
 
+export async function updateProduct(product, prod_id) {
+    const docRef = doc(db, COLLECTION_NAMES.PRODUCT, prod_id);
+    await updateDoc(docRef, product);
+}
 
 export async function createProduct(product) {
     const raw_product = new Product(product);
