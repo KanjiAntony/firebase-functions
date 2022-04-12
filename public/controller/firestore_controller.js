@@ -1,5 +1,5 @@
 import {
-    getFirestore, query, collection, orderBy, getDocs, addDoc, where, doc, getDoc, setDoc, updateDoc, deleteDoc,
+    getFirestore, query, collection, orderBy, getDocs, addDoc, where, doc, getDoc, setDoc, updateDoc, deleteDoc,onSnapshot 
 } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js"
 import { AccountInfo } from "../model/account_info.js";
 
@@ -7,6 +7,7 @@ import { COLLECTION_NAMES } from "../model/constants.js";
 import { Product } from "../model/product.js";
 import { Comment } from "../model/comments.js";
 import { ShoppingCart } from "../model/shopping_cart.js";
+import { Wishlist } from "../model/wishlist.js";
 
 const db = getFirestore();
 
@@ -19,9 +20,32 @@ export async function getProductList() {
         const p = new Product(doc.data());
         p.set_docId(doc.id);
         products.push(p);
+
     });
     return products;
 }
+
+/*export async function realtimeProductUpdate() {
+
+    
+    const q = query(collection(db, COLLECTION_NAMES.PRODUCT), orderBy('name'));
+
+    const realtime_products = onSnapshot(q, (querySnapshop) => {
+        const products = [];
+        querySnapshop.forEach(doc => {
+            const p = new Product(doc.data());
+            p.set_docId(doc.id);
+            products.push(p);
+            console.log(products);
+        });
+
+        
+
+    });
+
+    return products;
+
+}*/
 
 export async function updateProduct(product, prod_id) {
     const docRef = doc(db, COLLECTION_NAMES.PRODUCT, prod_id);
@@ -85,6 +109,7 @@ export async function getPurchaseHistory(uid) {
 export async function getAccountInfo(uid) {
     const docRef = doc(db, COLLECTION_NAMES.ACCOUNT_INFO, uid);
     const docSnap = await getDoc(docRef);
+    
     if (docSnap.exists()) {
         return new AccountInfo(docSnap.data());
     } else {
@@ -98,6 +123,64 @@ export async function getAccountInfo(uid) {
 export async function updateAccountInfo(uid, updateInfo) {
     const docRef = doc(db, COLLECTION_NAMES.ACCOUNT_INFO, uid);
     await updateDoc(docRef, updateInfo);
+}
+
+export async function addToWishlist(uid, product_id) {
+
+
+    const docRef = doc(db, COLLECTION_NAMES.WISHLIST, uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+
+            const user_wishlist_items = docSnap.data().items;
+            const is_available = user_wishlist_items.includes(product_id);
+
+            if(is_available) {
+                //console.log("Available")
+                const index = user_wishlist_items.indexOf(product_id);
+                if (index >= 0) {
+                        user_wishlist_items.splice(index, 1);
+                }
+                const updateInfo = {"items": user_wishlist_items};
+                await updateDoc(docRef, updateInfo);
+            } else {
+                //console.log("Not Available")
+                const updateInfo = {"items": [...user_wishlist_items, product_id]};
+                await updateDoc(docRef, updateInfo);
+            }
+
+    } else {
+
+        const items = [];
+        items.push(product_id);
+
+        const raw_wishlist = new Wishlist(items);
+        const data = raw_wishlist.serialize();
+        const wishlistDocRef = doc(db, COLLECTION_NAMES.WISHLIST, uid);
+        await setDoc(wishlistDocRef, data);
+
+    }
+
+    /*const q = query(docRef, where("items", "array-contains", product_id))
+
+    //console.log(q);
+
+    let querySnapshot = q.get();
+
+    if(querySnapshot.empty()) {
+        console.log("Available pace")
+    } else {
+        console.log("Not Available")
+    }
+
+    /*const items = [];
+    items.push(product_id);
+
+    const raw_wishlist = new Wishlist(items);
+    const data = raw_wishlist.serialize();
+    const wishlistDocRef = doc(db, COLLECTION_NAMES.WISHLIST, uid);
+    await setDoc(wishlistDocRef, data);*/
 }
 
 export async function createComment(comment) {

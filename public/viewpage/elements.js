@@ -5,8 +5,10 @@ export const MENU = {
     Purchases: document.getElementById('menu-purchases'),
     SignOut: document.getElementById('menu-signout'),
     Cart: document.getElementById('menu-cart'),
+    Wishlist: document.getElementById('menu-wishlist'),
     Profile: document.getElementById('menu-profile'),
     CartItemCount: document.getElementById('menu-cart-item-count'),
+    WishlistItemCount: document.getElementById('menu-wishlist-item-count'),
     MyProducts: document.getElementById('menu-my-products'),
 }
 

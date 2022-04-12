@@ -19,8 +19,10 @@ export function addEventListeners() {
 export async function home_page() {
     let html = '<h1>Enjoy Shopping</h1>';
     let products;
+
     try {
         products = await getProductList();
+
         if (cart && cart.getTotalQty() != 0) {
             cart.items.forEach(item => {
                 const p = products.find(e => e.docId == item.docId)
@@ -58,18 +60,6 @@ export async function home_page() {
         })
     }
 
-    /*var single_product = document.getElementsByClassName('product_card');
-    var single_product_form = document.getElementsByClassName('product_card_form');
-
-    for(var i=0; i < single_product.length; i++) {
-        single_product[i].addEventListener("click", async () => {
-
-            var url = ROUTE_PATHNAMES.PRODUCT + "/?id=" + single_product_form[i].value;
-
-            history.pushState(null, null, url);
-            await product_page();
-        } )
-    } */
 
 }
 

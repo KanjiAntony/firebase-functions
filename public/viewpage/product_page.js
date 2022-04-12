@@ -1,7 +1,7 @@
 import { MENU, root } from './elements.js';
 import { ROUTE_PATHNAMES } from '../controller/route.js';
 import * as Util from './util.js';
-import {getProductList, createComment, getAllComments, getSpecificProduct } from '../controller/firestore_controller.js';
+import {getProductList, createComment, getAllComments, getSpecificProduct, addToWishlist } from '../controller/firestore_controller.js';
 import { DEV } from '../model/constants.js';
 import { currentUser } from '../controller/firebase_auth.js';
 import { cart } from './cart_page.js';
@@ -98,7 +98,21 @@ export async function product_page() {
 
     });
 
-    await buildCommentView(c);
+    document.getElementById('add_to_wishlist').addEventListener('click', async e => {
+          
+
+                try {
+                    await addToWishlist(currentUser.uid, c);
+                    Util.info('Success', 'Added to wishlist!');
+                } catch (e) {
+                    if (DEV) console.log(e);
+                    Util.info('Add To Wishlist Error', JSON.stringify(e));
+                }
+                
+            
+
+    });
+
 
 }
 
@@ -195,6 +209,8 @@ function buildRichProdView(product, index) {
                                         <button class="btn btn-outline-danger" type="submit"
                                             onclick="this.form.submitter='INC'">&plus;</button>
                                     </form>
+
+                                    <button class="btn btn-primary" id="add_to_wishlist">Add to wishlist</button>
 
                                 </div>
                                 
