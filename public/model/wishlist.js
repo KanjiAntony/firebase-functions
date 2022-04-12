@@ -11,11 +11,16 @@ export class Wishlist {
         }
     }
 
+    getTotalWishlist() {
+        return this.items.length;
+    }
+
     static instance(){
         return new Wishlist({
             items: []
         })
     }
+
 
     /*addItem(product) {
         const index = this.items.findIndex(e => product.docId == e.docId);

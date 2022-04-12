@@ -103,7 +103,7 @@ export async function product_page() {
 
                 try {
                     await addToWishlist(currentUser.uid, c);
-                    Util.info('Success', 'Added to wishlist!');
+                    
                 } catch (e) {
                     if (DEV) console.log(e);
                     Util.info('Add To Wishlist Error', JSON.stringify(e));

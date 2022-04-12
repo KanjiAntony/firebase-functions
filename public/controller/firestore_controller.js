@@ -8,6 +8,7 @@ import { Product } from "../model/product.js";
 import { Comment } from "../model/comments.js";
 import { ShoppingCart } from "../model/shopping_cart.js";
 import { Wishlist } from "../model/wishlist.js";
+import * as Util from '../viewpage/util.js';
 
 const db = getFirestore();
 
@@ -83,12 +84,32 @@ export async function getSpecificProduct(prod_id) {
     const snapShot = await getDoc(q);
 
     const product = new Product(snapShot.data());
-
+    product.set_docId(prod_id);
     return product;
 }
 
 export async function checkout(cart) {
     const data = cart.serialize(Date.now());
+    //console.log(data);
+    await addDoc(collection(db, COLLECTION_NAMES.PURCHASE_HISTORY), data);
+}
+
+export async function checkout_wishlist(uid,wishlist) {
+
+    const items = [];
+    wishlist.forEach(prod => {
+
+        const raw_product = new Product(prod);
+        const prod_data = raw_product.serialize();
+        items.push(prod_data);
+    });
+    
+
+    //console.log(items);
+
+    const timestamp = Date.now();
+    const data = { uid, items, timestamp}
+
     await addDoc(collection(db, COLLECTION_NAMES.PURCHASE_HISTORY), data);
 }
 
@@ -125,6 +146,15 @@ export async function updateAccountInfo(uid, updateInfo) {
     await updateDoc(docRef, updateInfo);
 }
 
+export async function getWishlist(uid) {
+    const docRef = doc(db, COLLECTION_NAMES.WISHLIST, uid);
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+        return new Wishlist(docSnap.data().items);
+    } 
+}
+
 export async function addToWishlist(uid, product_id) {
 
 
@@ -144,10 +174,12 @@ export async function addToWishlist(uid, product_id) {
                 }
                 const updateInfo = {"items": user_wishlist_items};
                 await updateDoc(docRef, updateInfo);
+                Util.info('Success', 'Removed from wishlist!');
             } else {
                 //console.log("Not Available")
                 const updateInfo = {"items": [...user_wishlist_items, product_id]};
                 await updateDoc(docRef, updateInfo);
+                Util.info('Success', 'Added to wishlist!');
             }
 
     } else {
@@ -159,7 +191,7 @@ export async function addToWishlist(uid, product_id) {
         const data = raw_wishlist.serialize();
         const wishlistDocRef = doc(db, COLLECTION_NAMES.WISHLIST, uid);
         await setDoc(wishlistDocRef, data);
-
+        Util.info('Success', 'Added to wishlist!');
     }
 
     /*const q = query(docRef, where("items", "array-contains", product_id))

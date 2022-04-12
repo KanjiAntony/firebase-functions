@@ -7,6 +7,7 @@ import * as Util from '../viewpage/util.js';
 import { routing, ROUTE_PATHNAMES } from './route.js';
 import { initShoppingCart } from '../viewpage/cart_page.js';
 import { readAccountProfile } from '../viewpage/profile_page.js';
+import { getUserWishlist } from '../viewpage/wishlist_page.js';
 
 const auth = getAuth();
 export let currentUser = null;
@@ -87,6 +88,7 @@ async function AuthStateChanged(user) {
 
         await readAccountProfile();
         initShoppingCart();
+        await getUserWishlist();
         routing(window.location.pathname, window.location.hash);
 
     }

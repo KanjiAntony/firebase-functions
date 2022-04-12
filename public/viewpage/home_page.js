@@ -39,6 +39,9 @@ export async function home_page() {
     }
     root.innerHTML = html;
     const productForms = document.getElementsByClassName('form-product-qty');
+
+    let cart_prod_qty = null;
+
     for (let i = 0; i < productForms.length; i++) {
         productForms[i].addEventListener('submit', e => {
             e.preventDefault();
@@ -46,15 +49,17 @@ export async function home_page() {
             const submitter = e.target.submitter;
             if (submitter == 'DEC') {
                 cart.removeItem(p);
-                if (p.qty > 0) --p.qty;
+                if (cart_prod_qty > 0) --cart_prod_qty;
             } else if (submitter == 'INC') {
                 cart.addItem(p);
-                p.qty = p.qty == null ? 1 : p.qty + 1;
+                cart_prod_qty = cart_prod_qty == null ? 1 : cart_prod_qty + 1;
             } else {
                 if (DEV) console.log(e);
                 return;
             }
-            const updateQty = (p.qty == null || p.qty == 0) ? 'Add' : p.qty;
+
+
+            const updateQty = (cart_prod_qty == null || cart_prod_qty == 0) ? 'Add' : cart_prod_qty;
             document.getElementById(`item-count-${p.docId}`).innerHTML = updateQty;
             MENU.CartItemCount.innerHTML = `${cart.getTotalQty()}`;
         })
@@ -82,7 +87,7 @@ function buildProductView(product, index) {
                         onclick="this.form.submitter='DEC'">&minus;</button>
                     <div id="item-count-${product.docId}"
                         class="container round text-center text-white bg-primary d-inline-block w-50">
-                        ${product.qty == null || product.qty == 0 ? 'Add' : product.qty}
+                            Add
                     </div>
                     <button class="btn btn-outline-danger" type="submit"
                         onclick="this.form.submitter='INC'">&plus;</button>

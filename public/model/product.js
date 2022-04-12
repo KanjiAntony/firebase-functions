@@ -3,11 +3,11 @@ export class Product {
         if (data) {
             this.category = data.category ? data.category.toLowerCase().trim() : null;
             this.uid = data.uid ? data.uid : null;
-            this.name = data.name.toLowerCase().trim();
-            this.price = typeof data.price == 'number' ? data.price : Number(data.price);
-            this.summary = data.summary.trim();
-            this.imageURL = data.imageURL;
-            this.qty = data.qty ? data.qty : null;
+            this.name = data.name ? data.name.toLowerCase().trim(): null;
+            this.price = data.price ? typeof data.price == 'number' ? data.price : Number(data.price) : null;
+            this.summary = data.summary? data.summary.trim() : null;
+            this.imageURL = data.imageURL ? data.imageURL : null;
+            this.qty = data.qty ? typeof data.qty == 'number' ? data.qty : Number(data.qty) : null;
         }
     }
 
