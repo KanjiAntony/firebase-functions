@@ -1,7 +1,15 @@
 import * as Elements from "./elements.js";
 
 export function currency(value){
-    return Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}).format(value);
+    const curr = Elements.MENU.CurrencyChooser.value;
+    let format;
+    if(curr == "USD") {
+        format = "en-US";
+    } else if(curr == "EUR") {
+        format = "de-DE";
+    }
+    //return Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}).format(value);
+    return Intl.NumberFormat(format, {style: 'currency', currency: curr}).format(value);
 }
 
 export function info(title, body, closeModal) {

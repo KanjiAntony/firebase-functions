@@ -9,6 +9,7 @@ import * as MyProductsPage from './viewpage/my_products_page.js'
 import * as EditMyProductsPage from './viewpage/edit_my_products_page.js'
 
 import {routing} from './controller/route.js'
+import { MENU } from './viewpage/elements.js'
 
 FirebaseAuth.addEventListeners();
 HomePage.addEventListeners();
@@ -18,6 +19,16 @@ WishlistPage.addEventListeners();
 ProfilePage.addEventListeners();
 MyProductsPage.addEventListeners();
 EditMyProductsPage.addEventListeners();
+
+MENU.CurrencyChooser.addEventListener("change", e => {
+
+    if(e.target.value == "Eur") {
+
+        
+    }
+
+
+});
 
 window.onload = () => {
     const pathname = window.location.pathname;
