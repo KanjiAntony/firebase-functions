@@ -1,23 +1,23 @@
 import { Product } from "./product.js";
 
-export class Wishlist {
+export class Rating {
     constructor(items) {
         this.items = items;
     }
 
     serialize(){
         return {
-            items: this.items,
+            items: this.items
         }
     }
 
-    getTotalWishlist() {
+    getTotalRating() {
         return this.items.length;
     }
 
     static instance(){
-        return new Wishlist({
-            items: []
+        return new Rating({
+            items: new Map()
         })
     }
 

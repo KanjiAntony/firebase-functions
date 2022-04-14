@@ -1,7 +1,8 @@
 import { MENU, root } from './elements.js';
 import { ROUTE_PATHNAMES } from '../controller/route.js';
 import * as Util from './util.js';
-import {getProductList, createComment, getAllComments, getSpecificProduct, addToWishlist } from '../controller/firestore_controller.js';
+import {getProductList, createComment, getAllComments, 
+    getSpecificProduct, addToWishlist, addToRatings,getUserRatings } from '../controller/firestore_controller.js';
 import { DEV } from '../model/constants.js';
 import { currentUser } from '../controller/firebase_auth.js';
 import { cart } from './cart_page.js';
@@ -24,28 +25,95 @@ export async function product_page() {
 
     let html = '<h1>Product page</h1>';
     let products;
+    let user_rating;
+    let user_rating_1 = "";
+    let user_rating_2 = "";
+    let user_rating_3 = "";
+    let user_rating_4 = "";
+    let user_rating_5 = "";
     try {
         //products = await getProductList();
         products = await getSpecificProduct(c);
+        user_rating = await getUserRatings(currentUser.uid, c);
+
+        if(user_rating == 0) {
+
+            user_rating_1 = "";
+            user_rating_2 = "";
+            user_rating_3 = "";
+            user_rating_4 = "";
+            user_rating_5 = "";
+
+        } else if(user_rating == 1) {
+
+            user_rating_1 = "star-rating-checked";
+            user_rating_2 = "";
+            user_rating_3 = "";
+            user_rating_4 = "";
+            user_rating_5 = "";
+
+        } else if(user_rating == 2) {
+
+            user_rating_1 = "star-rating-checked";
+            user_rating_2 = "star-rating-checked";
+            user_rating_3 = "";
+            user_rating_4 = "";
+            user_rating_5 = "";
+
+        } else if(user_rating == 3) {
+
+            user_rating_1 = "star-rating-checked";
+            user_rating_2 = "star-rating-checked";
+            user_rating_3 = "star-rating-checked";
+            user_rating_4 = "";
+            user_rating_5 = "";
+
+        } else if(user_rating == 4) {
+
+            user_rating_1 = "star-rating-checked";
+            user_rating_2 = "star-rating-checked";
+            user_rating_3 = "star-rating-checked";
+            user_rating_4 = "star-rating-checked";
+            user_rating_5 = "";
+
+        } else if(user_rating == 5) {
+
+            user_rating_1 = "star-rating-checked";
+            user_rating_2 = "star-rating-checked";
+            user_rating_3 = "star-rating-checked";
+            user_rating_4 = "star-rating-checked";
+            user_rating_5 = "star-rating-checked";
+
+        }
+
+
+
         if (cart && cart.getTotalQty() != 0) {
             cart.items.forEach(item => {
                 const p = products.find(e => e.docId == item.docId)
                 if (p) p.qty = item.qty;
             });
         }
+
+        html += buildRichProdView(products, c, user_rating_1,user_rating_2,
+            user_rating_3,user_rating_4,user_rating_5);
+
+            root.innerHTML = html;
+
+            await buildCommentView(c);    
+
     } catch (e) {
         if (DEV) console.log(e);
         Util.info('Failed to get the product list', JSON.stringify(e));
     }
 
-    /*for (let i = 0; i < products.length; i++) {
-        html += buildProductView(products[i], i)
-    }*/
-    console.log(products);
 
-    html += buildRichProdView(products, c);
+    
 
-    root.innerHTML = html;
+    
+
+    
+
     const productForms = document.getElementsByClassName('form-product-qty');
     for (let i = 0; i < productForms.length; i++) {
         productForms[i].addEventListener('submit', e => {
@@ -113,6 +181,81 @@ export async function product_page() {
 
     });
 
+    document.getElementById('rating-1').addEventListener('click', async e => {
+          
+        const rating_value = 1;
+
+
+        try {
+            await addToRatings(currentUser.uid, c, rating_value);
+            await product_page();
+        } catch (e) {
+            if (DEV) console.log(e);
+            Util.info('Add To Ratings Error', JSON.stringify(e));
+        }
+        
+    });
+
+    document.getElementById('rating-2').addEventListener('click', async e => {
+          
+        const rating_value = 2;
+
+
+        try {
+            await addToRatings(currentUser.uid, c, rating_value);
+            await product_page();
+        } catch (e) {
+            if (DEV) console.log(e);
+            Util.info('Add To Ratings Error', JSON.stringify(e));
+        }
+        
+    });
+
+    document.getElementById('rating-3').addEventListener('click', async e => {
+          
+        const rating_value = 3;
+
+
+        try {
+            await addToRatings(currentUser.uid, c, rating_value);
+            await product_page();
+        } catch (e) {
+            if (DEV) console.log(e);
+            Util.info('Add To Ratings Error', JSON.stringify(e));
+        }
+        
+    });
+
+    document.getElementById('rating-4').addEventListener('click', async e => {
+          
+        const rating_value = 4;
+
+
+        try {
+            await addToRatings(currentUser.uid, c, rating_value);
+            await product_page();
+        } catch (e) {
+            if (DEV) console.log(e);
+            Util.info('Add To Ratings Error', JSON.stringify(e));
+        }
+        
+    });
+
+    document.getElementById('rating-5').addEventListener('click', async e => {
+          
+        const rating_value = 5;
+
+
+        try {
+            await addToRatings(currentUser.uid, c, rating_value);
+            await product_page();
+        } catch (e) {
+            if (DEV) console.log(e);
+            Util.info('Add To Ratings Error', JSON.stringify(e));
+        }
+        
+    });
+
 
 }
 
@@ -161,7 +304,7 @@ async function buildCommentView(c) {
 
 }
 
-function buildRichProdView(product, index) {
+function buildRichProdView(product, index, user_rating_1,user_rating_2,user_rating_3,user_rating_4,user_rating_5) {
 
     return  `
 
@@ -210,10 +353,30 @@ function buildRichProdView(product, index) {
                                             onclick="this.form.submitter='INC'">&plus;</button>
                                     </form>
 
-                                    <button class="btn btn-primary" id="add_to_wishlist">Add to wishlist</button>
+                                
+                                    
 
                                 </div>
+
+                                <br/>
+
+                                    <button class="btn btn-primary" id="add_to_wishlist">Add to wishlist</button>
+
                                 
+                                <br/>
+                                    
+                                    <div class="pro-details-rating-wrap">
+                                                    <div class="rating-product">
+                                                        <span class="heading">User Rating</span>
+                                                        <span 
+                                                            class="fa fa-star star-rating ${user_rating_1}" 
+                                                            id="rating-1"></span>
+                                                        <span class="fa fa-star star-rating ${user_rating_2}" id="rating-2"></span>
+                                                        <span class="fa fa-star star-rating ${user_rating_3}" id="rating-3"></span>
+                                                        <span class="fa fa-star star-rating ${user_rating_4}" id="rating-4"></span>
+                                                        <span class="fa fa-star star-rating ${user_rating_5}" id="rating-5"></span>
+                                                    </div>
+                                                </div>
                               
 
                                 
@@ -249,16 +412,6 @@ function buildRichProdView(product, index) {
                                                     <input name="name" placeholder="Name*" type="text" />
                                                 </div>
 
-                                                <div class="pro-details-rating-wrap">
-                                                    <div class="rating-product">
-                                                        <i class="ion-android-star" style="font-size: 20px;"></i>
-                                                        <i class="ion-android-star"></i>
-                                                        <i class="ion-android-star"></i>
-                                                        <i class="ion-android-star"></i>
-                                                        <i class="ion-android-star"></i>
-                                                    </div>
-                                                </div>
-                                            
                                                 <div class="col-lg-12">
                                                     <textarea name="comment" placeholder="Your  Comment*"></textarea>
                                                     <button class="submit" type="submit">Comment</button>

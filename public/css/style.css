@@ -27,3 +27,11 @@ textarea{
     width: 90%;
     min-height: 150px;
 }
+
+.star-rating {
+    font-size: 25px;
+  }
+  
+.star-rating-checked {
+    color: orange;
+}

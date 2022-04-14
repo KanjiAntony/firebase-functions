@@ -9,6 +9,7 @@ import { Comment } from "../model/comments.js";
 import { ShoppingCart } from "../model/shopping_cart.js";
 import { Wishlist } from "../model/wishlist.js";
 import * as Util from '../viewpage/util.js';
+import { Rating } from "../model/ratings.js";
 
 const db = getFirestore();
 
@@ -194,25 +195,105 @@ export async function addToWishlist(uid, product_id) {
         Util.info('Success', 'Added to wishlist!');
     }
 
-    /*const q = query(docRef, where("items", "array-contains", product_id))
+}
 
-    //console.log(q);
+export async function addToRatings(uid, product_id, rating) {
 
-    let querySnapshot = q.get();
 
-    if(querySnapshot.empty()) {
-        console.log("Available pace")
+    const docRef = doc(db, COLLECTION_NAMES.RATINGS, product_id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+
+            const user_ratings_items = docSnap.data().items;
+            //const is_available = user_ratings_items.includes(product_id);
+
+            const fetched_user_rate_map = new Map(Object.entries(user_ratings_items))
+            
+            const has_user_rated = fetched_user_rate_map.has(uid);
+
+            if(has_user_rated) {
+
+                   //update the value of that user 
+                   const fetched_user_rate_info = fetched_user_rate_map.get(uid);
+                   //console.log("old ",fetched_user_rate_info);
+
+                   const updated_user_rate_info_map = fetched_user_rate_map.set(uid,rating);
+                   const updated_user_rate_info_object = Object.fromEntries(
+                        updated_user_rate_info_map
+                   );
+
+                   const updateInfo = {"items": updated_user_rate_info_object};
+                    await updateDoc(docRef, updateInfo);
+                    Util.info('Success', 'Updated user ratings!');
+
+            } else {
+
+                    // create a new value for user
+                    const updated_user_rate_info_map = fetched_user_rate_map.set(uid,rating);
+                   const updated_user_rate_info_object = Object.fromEntries(
+                        updated_user_rate_info_map
+                   );
+
+                   const updateInfo = {"items": updated_user_rate_info_object};
+                    await updateDoc(docRef, updateInfo);
+                    Util.info('Success', 'Created user ratings!');
+
+            }
+
+        
+
     } else {
-        console.log("Not Available")
+
+        const items = new Map();
+        items.set(uid, rating);
+
+        const raw_rating = new Rating(Object.fromEntries(items));
+        const data = raw_rating.serialize();
+
+        const ratingDocRef = doc(db, COLLECTION_NAMES.RATINGS, product_id);
+        await setDoc(ratingDocRef, data);
+        Util.info('Success', 'Added to ratings!');
     }
 
-    /*const items = [];
-    items.push(product_id);
+}
 
-    const raw_wishlist = new Wishlist(items);
-    const data = raw_wishlist.serialize();
-    const wishlistDocRef = doc(db, COLLECTION_NAMES.WISHLIST, uid);
-    await setDoc(wishlistDocRef, data);*/
+export async function getUserRatings(uid, product_id) {
+
+
+    const docRef = doc(db, COLLECTION_NAMES.RATINGS, product_id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+
+            const user_ratings_items = docSnap.data().items;
+            //const is_available = user_ratings_items.includes(product_id);
+
+            const fetched_user_rate_map = new Map(Object.entries(user_ratings_items))
+            
+            const has_user_rated = fetched_user_rate_map.has(uid);
+
+            if(has_user_rated) {
+
+                   //update the value of that user 
+                   const fetched_user_rating = fetched_user_rate_map.get(uid);
+                   
+                    return fetched_user_rating;
+                   
+
+            } else {
+
+                    return 0;
+
+            }
+
+        
+
+    } else {
+
+        return 0;
+    }
+
 }
 
 export async function createComment(comment) {
