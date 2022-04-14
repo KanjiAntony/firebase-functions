@@ -1,25 +1,72 @@
 import { MENU, root } from './elements.js';
 import { ROUTE_PATHNAMES } from '../controller/route.js';
 import * as Util from './util.js';
-import { getProductsCategoryList } from '../controller/firestore_controller.js';
+import { getProductsSearchList } from '../controller/firestore_controller.js';
 import { DEV } from '../model/constants.js';
 import { currentUser } from '../controller/firebase_auth.js';
 import { cart } from './cart_page.js';
-import { product_page } from "./product_page.js"
 
 
-export async function products_category_page() {
+export async function search_page() {
     
     let products;
 
     let url_string = window.location.href;
     let url = new URL(url_string);
-    let c = url.searchParams.get('type');
+    let c = url.searchParams.get('q');
+    let category_filter = url.searchParams.get('category');
 
-    let html = '<h1>'+c.toUpperCase()+'</h1>';
+    console.log(category_filter);
+
+    let html = `
+            
+                <h1>Search: ${c.toUpperCase()}</h1>
+
+                <div class="card">
+                        <div class="body">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-6">
+                                    <label>Search</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Search..." value="${c}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-6">
+                                    <label>Status</label>
+                                    <div class="form-group">
+                                    <select class="custom-select">
+                                        <option selected="">Newest first</option>
+                                        <option value="1">Oldest first</option>
+                                        <option value="2">Low salary first</option>
+                                        <option value="3">High salary first</option>
+                                        <option value="3">Sort by name</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-6">
+                                    <label>Order</label>
+                                    <div class="form-group">
+                                        <select class="custom-select">
+                                            <option selected="">Newest first</option>
+                                            <option value="1">Oldest first</option>
+                                            <option value="2">Low salary first</option>
+                                            <option value="3">High salary first</option>
+                                            <option value="3">Sort by name</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-4 col-sm-6">
+                                    <label>&nbsp;</label>
+                                    <a href="javascript:void(0);" class="btn btn-sm btn-primary btn-block" title="">Filter</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            
+            `;
 
     try {
-        products = await getProductsCategoryList(c);
+        products = await getProductsSearchList(c);
 
         if (cart && cart.getTotalQty() != 0) {
             cart.items.forEach(item => {

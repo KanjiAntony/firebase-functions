@@ -8,6 +8,7 @@ export class Product {
             this.summary = data.summary? data.summary.trim() : null;
             this.imageURL = data.imageURL ? data.imageURL : null;
             this.qty = data.qty ? typeof data.qty == 'number' ? data.qty : Number(data.qty) : null;
+            this.ratings = data.ratings ? typeof data.ratings == 'number' ? data.ratings : Number(data.ratings) : null;
         }
     }
 
@@ -32,6 +33,7 @@ export class Product {
             summary: this.summary,
             imageURL: this.imageURL,
             qty: this.qty,
+            ratings: this.ratings,
         }
     }
 }

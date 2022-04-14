@@ -1,5 +1,6 @@
 import {
-    getFirestore, query, collection, orderBy, getDocs, addDoc, where, doc, getDoc, setDoc, updateDoc, deleteDoc,onSnapshot 
+    getFirestore, query, collection, orderBy, getDocs, addDoc, where,startAt, endAt,
+     doc, getDoc, setDoc, updateDoc, deleteDoc,onSnapshot 
 } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js"
 import { AccountInfo } from "../model/account_info.js";
 
@@ -15,7 +16,21 @@ const db = getFirestore();
 
 export async function getProductList() {
     const products = [];
-    const q = query(collection(db, COLLECTION_NAMES.PRODUCT), orderBy('name'));
+    const q = query(collection(db, COLLECTION_NAMES.PRODUCT), orderBy('rating'));
+    const snapShot = await getDocs(q);
+
+    snapShot.forEach(doc => {
+        const p = new Product(doc.data());
+        p.set_docId(doc.id);
+        products.push(p);
+
+    });
+    return products;
+}
+
+export async function getProductListBestSeller() {
+    const products = [];
+    const q = query(collection(db, COLLECTION_NAMES.PRODUCT), orderBy('rating', "desc"));
     const snapShot = await getDocs(q);
 
     snapShot.forEach(doc => {
@@ -90,6 +105,31 @@ export async function getProductsCategoryList(category) {
         p.set_docId(doc.id);
         products.push(p);
     });
+    return products;
+} 
+
+export async function getProductsSearchList(search) {
+    const products = [];
+    const q = query(collection(db, COLLECTION_NAMES.PRODUCT), 
+                orderBy('name'), startAt(search), endAt(search+'\uf8ff'));
+    const qc = query(collection(db, COLLECTION_NAMES.PRODUCT), 
+                orderBy('category'), startAt(search), endAt(search+'\uf8ff'));
+    const snapShot = await getDocs(q);
+
+    snapShot.forEach(doc => {
+        const p = new Product(doc.data());
+        p.set_docId(doc.id);
+        products.push(p);
+    });
+
+    const snapShot2 = await getDocs(qc);
+
+    snapShot2.forEach(doc => {
+        const p = new Product(doc.data());
+        p.set_docId(doc.id);
+        products.push(p);
+    });
+
     return products;
 } 
 
@@ -209,6 +249,22 @@ export async function addToWishlist(uid, product_id) {
         Util.info('Success', 'Added to wishlist!');
     }
 
+}
+
+export async function updateProductRating(rating, prod_id) {
+
+    const docRef = doc(db, COLLECTION_NAMES.PRODUCT, prod_id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+
+        const product_ratings = docSnap.data().ratings;
+
+        const updateInfo = {...product_ratings, rating};
+
+        await updateDoc(docRef, updateInfo);
+
+    }
 }
 
 export async function addToRatings(uid, product_id, rating) {

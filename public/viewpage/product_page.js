@@ -2,7 +2,7 @@ import { MENU, root } from './elements.js';
 import { ROUTE_PATHNAMES } from '../controller/route.js';
 import * as Util from './util.js';
 import {getProductList, createComment, getAllComments, 
-    getSpecificProduct, addToWishlist, addToRatings,getUserRatings,getTotalRatings } from '../controller/firestore_controller.js';
+    getSpecificProduct, addToWishlist, addToRatings,getUserRatings,getTotalRatings,updateProductRating } from '../controller/firestore_controller.js';
 import { DEV } from '../model/constants.js';
 import { currentUser } from '../controller/firebase_auth.js';
 import { cart } from './cart_page.js';
@@ -37,6 +37,8 @@ export async function product_page() {
         products = await getSpecificProduct(c);
         user_rating = await getUserRatings(currentUser.uid, c);
         total_rating = await getTotalRatings(currentUser.uid, c);
+
+        await updateProductRating(total_rating, c);
 
         if(user_rating == 0) {
 
@@ -369,7 +371,7 @@ function buildRichProdView(product, index,
                                 
                                 <br/>
                                     
-                                    <div class="pro-details-rating-wrap">
+                                                <div class="pro-details-rating-wrap">
                                                     <div class="rating-product">
                                                         <span class="heading">User Rating</span>
                                                         <span 
