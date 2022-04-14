@@ -216,7 +216,11 @@ export async function addToRatings(uid, product_id, rating) {
 
                    //update the value of that user 
                    const fetched_user_rate_info = fetched_user_rate_map.get(uid);
-                   //console.log("old ",fetched_user_rate_info);
+                   
+                   //if user has rated 1, on press 1 rating, make his rating 0
+                   if(fetched_user_rate_info == 1 && rating == 1) {
+                        rating = 0;
+                   }
 
                    const updated_user_rate_info_map = fetched_user_rate_map.set(uid,rating);
                    const updated_user_rate_info_object = Object.fromEntries(
@@ -289,6 +293,33 @@ export async function getUserRatings(uid, product_id) {
 
         
 
+    } else {
+
+        return 0;
+    }
+
+}
+
+export async function getTotalRatings(uid, product_id) {
+
+
+    const docRef = doc(db, COLLECTION_NAMES.RATINGS, product_id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+
+            const user_ratings_items = docSnap.data().items;
+
+            const fetched_user_rate_map = new Map(Object.entries(user_ratings_items))
+            
+            var total_ratings = 0;
+
+            fetched_user_rate_map.forEach((value,key) => {
+                total_ratings = total_ratings+value;
+            })
+
+            return total_ratings;
+        
     } else {
 
         return 0;

@@ -2,7 +2,7 @@ import { MENU, root } from './elements.js';
 import { ROUTE_PATHNAMES } from '../controller/route.js';
 import * as Util from './util.js';
 import {getProductList, createComment, getAllComments, 
-    getSpecificProduct, addToWishlist, addToRatings,getUserRatings } from '../controller/firestore_controller.js';
+    getSpecificProduct, addToWishlist, addToRatings,getUserRatings,getTotalRatings } from '../controller/firestore_controller.js';
 import { DEV } from '../model/constants.js';
 import { currentUser } from '../controller/firebase_auth.js';
 import { cart } from './cart_page.js';
@@ -31,10 +31,12 @@ export async function product_page() {
     let user_rating_3 = "";
     let user_rating_4 = "";
     let user_rating_5 = "";
+    let total_rating;
     try {
         //products = await getProductList();
         products = await getSpecificProduct(c);
         user_rating = await getUserRatings(currentUser.uid, c);
+        total_rating = await getTotalRatings(currentUser.uid, c);
 
         if(user_rating == 0) {
 
@@ -96,7 +98,7 @@ export async function product_page() {
         }
 
         html += buildRichProdView(products, c, user_rating_1,user_rating_2,
-            user_rating_3,user_rating_4,user_rating_5);
+            user_rating_3,user_rating_4,user_rating_5,total_rating);
 
             root.innerHTML = html;
 
@@ -304,7 +306,9 @@ async function buildCommentView(c) {
 
 }
 
-function buildRichProdView(product, index, user_rating_1,user_rating_2,user_rating_3,user_rating_4,user_rating_5) {
+function buildRichProdView(product, index, 
+    user_rating_1,user_rating_2,user_rating_3,
+    user_rating_4,user_rating_5,total_rating) {
 
     return  `
 
@@ -375,7 +379,8 @@ function buildRichProdView(product, index, user_rating_1,user_rating_2,user_rati
                                                         <span class="fa fa-star star-rating ${user_rating_3}" id="rating-3"></span>
                                                         <span class="fa fa-star star-rating ${user_rating_4}" id="rating-4"></span>
                                                         <span class="fa fa-star star-rating ${user_rating_5}" id="rating-5"></span>
-                                                    </div>
+                                                    </div> 
+                                                    (${total_rating} ratings)
                                                 </div>
                               
 
