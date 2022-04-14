@@ -77,7 +77,21 @@ export async function getMyProductsList(uid) {
         products.push(p);
     });
     return products;
-}
+} 
+
+export async function getProductsCategoryList(category) {
+    const products = [];
+    const q = query(collection(db, COLLECTION_NAMES.PRODUCT), 
+                where('category', '==', category));
+    const snapShot = await getDocs(q);
+
+    snapShot.forEach(doc => {
+        const p = new Product(doc.data());
+        p.set_docId(doc.id);
+        products.push(p);
+    });
+    return products;
+} 
 
 export async function getSpecificProduct(prod_id) { 
 
