@@ -265,6 +265,34 @@ export async function getMyPromos(uid) {
 
 }
 
+export async function getUserPromoValue(uid, promo_code) {
+
+
+    const docRef = doc(db, COLLECTION_NAMES.ACCOUNT_INFO, uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+
+            const user_promos = docSnap.data().promos;
+
+            const fetched_user_promo_map = new Map(Object.entries(user_promos));
+
+            const has_user_promo = fetched_user_promo_map.has(promo_code);
+
+            if(has_user_promo) {
+
+                //console.log(fetched_user_promo_map.get(promo_code));
+
+                return fetched_user_promo_map.get(promo_code);
+
+            } else {
+                return "0";
+            }
+        
+    } 
+
+}
+
 export async function updateAccountCurrency(uid, currency) {
 
     const docRef = doc(db, COLLECTION_NAMES.ACCOUNT_INFO, uid);
