@@ -201,6 +201,70 @@ export async function updateAccountInfo(uid, updateInfo) {
     await updateDoc(docRef, updateInfo);
 }
 
+export async function createUpdatePromo(uid, promo_code, promo_value) {
+
+
+    const docRef = doc(db, COLLECTION_NAMES.ACCOUNT_INFO, uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+
+            const user_promo_codes = docSnap.data().promos;
+            //const is_available = user_ratings_items.includes(product_id);
+
+            const fetched_user_promo_map = new Map(Object.entries(user_promo_codes))
+            
+            const has_user_promo = fetched_user_promo_map.has(promo_code);
+
+            if(has_user_promo) {
+
+
+                   const updated_user_promo_info_map = fetched_user_promo_map.set(promo_code,promo_value);
+                   const updated_user_promo_info_object = Object.fromEntries(
+                        updated_user_promo_info_map
+                   );
+
+                   const updateInfo = {"promos": updated_user_promo_info_object};
+                    await updateDoc(docRef, updateInfo);
+                    Util.info('Success', 'Updated promo code!');
+
+            } else {
+
+                    // create a new value for user
+                    const updated_user_promo_info_map = fetched_user_promo_map.set(promo_code,promo_value);
+                   const updated_user_promo_info_object = Object.fromEntries(
+                        updated_user_promo_info_map
+                   );
+
+                   const updateInfo = {"promos": updated_user_promo_info_object};
+                    await updateDoc(docRef, updateInfo);
+                    Util.info('Success', 'Created promo code!');
+
+            }
+        }
+        
+
+}
+
+export async function getMyPromos(uid) {
+
+
+    const docRef = doc(db, COLLECTION_NAMES.ACCOUNT_INFO, uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+
+            const user_promos = docSnap.data().promos;
+
+            const fetched_user_promo_map = new Map(Object.entries(user_promos))
+
+
+            return fetched_user_promo_map;
+        
+    } 
+
+}
+
 export async function updateAccountCurrency(uid, currency) {
 
     const docRef = doc(db, COLLECTION_NAMES.ACCOUNT_INFO, uid);
@@ -292,7 +356,7 @@ export async function updateProductRating(rating, prod_id) {
 
     if (docSnap.exists()) {
 
-        const product_ratings = docSnap.data().ratings;
+        const product_ratings = docSnap.data().rating;
 
         const updateInfo = {...product_ratings, rating};
 

@@ -7,6 +7,7 @@ import * as WishlistPage from './viewpage/wishlist_page.js'
 import * as ProfilePage from './viewpage/profile_page.js'
 import * as MyProductsPage from './viewpage/my_products_page.js'
 import * as EditMyProductsPage from './viewpage/edit_my_products_page.js'
+import * as MyPromoPage from './viewpage/my_promo_page.js'
 
 import {routing} from './controller/route.js'
 import { MENU } from './viewpage/elements.js'
@@ -22,7 +23,7 @@ WishlistPage.addEventListeners();
 ProfilePage.addEventListeners();
 MyProductsPage.addEventListeners();
 EditMyProductsPage.addEventListeners();
-
+MyPromoPage.addEventListeners();
 
 
 window.onload = () => {

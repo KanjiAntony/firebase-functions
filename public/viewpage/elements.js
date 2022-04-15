@@ -11,6 +11,7 @@ export const MENU = {
     WishlistItemCount: document.getElementById('menu-wishlist-item-count'),
     MyProducts: document.getElementById('menu-my-products'),
     CurrencyChooser: document.getElementById('choose-currency'),
+    MyPromo: document.getElementById('menu-my-promo'),
 }
 
 //this is for modal transformation//

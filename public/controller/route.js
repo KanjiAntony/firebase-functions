@@ -8,6 +8,7 @@ import { wishlist_page } from "../viewpage/wishlist_page.js"
 import { profile_page } from "../viewpage/profile_page.js"
 import { my_products_page } from "../viewpage/my_products_page.js"
 import { edit_my_products_page } from "../viewpage/edit_my_products_page.js"
+import { my_promo_page } from "../viewpage/my_promo_page.js"
 
 export const ROUTE_PATHNAMES = {
     HOME: '/',
@@ -20,6 +21,7 @@ export const ROUTE_PATHNAMES = {
     WISHLIST: '/wishlist',
     MY_PRODUCTS: '/my-products',
     EDIT_MY_PRODUCTS: '/edit-my-product',
+    MY_PROMO: '/my-promo',
 }
 
 export const routes = [
@@ -33,6 +35,7 @@ export const routes = [
     { pathname: ROUTE_PATHNAMES.PURCHASES, page: purchases_page },
     { pathname: ROUTE_PATHNAMES.MY_PRODUCTS, page: my_products_page },
     { pathname: ROUTE_PATHNAMES.EDIT_MY_PRODUCTS, page: edit_my_products_page },
+    { pathname: ROUTE_PATHNAMES.MY_PROMO, page: my_promo_page },
 ];
 
 export function routing(pathname, hash) {
