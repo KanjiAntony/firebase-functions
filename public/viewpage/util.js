@@ -1,15 +1,26 @@
+import { currentUser } from "../controller/firebase_auth.js";
+import { getAccountCurrency } from "../controller/firestore_controller.js";
+import { DEV } from "../model/constants.js";
 import * as Elements from "./elements.js";
 
+
+
 export function currency(value){
-    const curr = Elements.MENU.CurrencyChooser.value;
+    let the_curr;
+    let curr = Elements.MENU.CurrencyChooser.value;
     let format;
     if(curr == "USD") {
+        the_curr = "USD";
         format = "en-US";
     } else if(curr == "EUR") {
+        the_curr = "EUR";
         format = "de-DE";
+    } else if(curr == "") {
+        the_curr = "USD";
+        format = "en-US";
     }
     //return Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'}).format(value);
-    return Intl.NumberFormat(format, {style: 'currency', currency: curr}).format(value);
+    return Intl.NumberFormat(format, {style: 'currency', currency: the_curr}).format(value);
 }
 
 export function info(title, body, closeModal) {

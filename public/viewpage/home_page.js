@@ -1,7 +1,8 @@
 import { MENU, root } from './elements.js';
 import { ROUTE_PATHNAMES } from '../controller/route.js';
 import * as Util from './util.js';
-import { getProductList,getTotalRatings,getProductListBestSeller } from '../controller/firestore_controller.js';
+import { getProductList,getTotalRatings,getProductListBestSeller,
+    updateAccountCurrency, getAccountCurrency } from '../controller/firestore_controller.js';
 import { DEV } from '../model/constants.js';
 import { currentUser } from '../controller/firebase_auth.js';
 import { cart } from './cart_page.js';
@@ -15,7 +16,10 @@ export function addEventListeners() {
         await home_page();
         Util.enableButton(MENU.Home, label);
     });
+
+    
 }
+
 export async function home_page() {
     let html = `<h1>Enjoy Shopping</h1>
     
@@ -50,6 +54,16 @@ export async function home_page() {
     try {
         products = await getProductList();
 
+        let global_curr = await getAccountCurrency(currentUser.uid);
+
+        if(global_curr == "USD") {
+            MENU.CurrencyChooser.value = "USD";
+        } else if(global_curr == "EUR") {
+            MENU.CurrencyChooser.value = "EUR";
+        } else if(global_curr == "") {
+            MENU.CurrencyChooser.value = "USD";
+        }
+
         if (cart && cart.getTotalQty() != 0) {
             cart.items.forEach(item => {
                 const p = products.find(e => e.docId == item.docId)
@@ -57,10 +71,31 @@ export async function home_page() {
             });
         }
 
+        
+
         for (let i = 0; i < products.length; i++) {
             html += await buildProductView(products[i], i)
         }
         root.innerHTML = html;
+
+        
+
+        MENU.CurrencyChooser.addEventListener("change", async e => {
+
+            console.log(e.target.value);
+
+            if(e.target.value == "USD") {
+        
+                await updateAccountCurrency(currentUser.uid, "USD");
+                
+            } else if(e.target.value == "EUR") {
+    
+                await updateAccountCurrency(currentUser.uid, "EUR");
+    
+            }
+        
+        
+        });
 
     } catch (e) {
         if (DEV) console.log(e);
@@ -81,55 +116,16 @@ export async function home_page() {
 
                 if(e.target.value == "best") { 
 
-                    products2 = await getProductListBestSeller();
-
-                    for (let i = 0; i < products2.length; i++) {
-                        html += await buildProductView(products2[i], i)
-                    }
-
-                    //console.log(products2);
+                   
 
                 } else if(e.target.value == "worst") {
 
-                    let html2 = `<h1>Enjoy Shopping</h1>
-    
-                            <br/>
-                                        <div class="card">
-                                        <div class="body">
-                                            <div class="row">
-
-                                                <div class="col-lg-4 col-md-4 col-sm-6">
-                                                </div>
-                                                <div class="col-lg-5 col-md-4 col-sm-6">
-                                                    <h2>Choose</h2>
-                                                    <div class="form-group">
-                                                        <select class="custom-select" id="bestseller">
-                                                            <option selected value="worst">All sellers</option>
-                                                            <option value="best">Best seller 12</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-3 col-md-4 col-sm-6">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <br/>
-
-                            `;
-
-                    products3 = await getProductList();
-
-                    for (let i = 0; i < products3.length; i++) {
-                        html += await buildProductView(products3[i], i)
-                    }
-
+                
                    
 
                 }
 
-                root.innerHTML = html;
+                
 
             } catch (e) {
                 if (DEV) console.log(e);

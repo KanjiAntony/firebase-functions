@@ -1,7 +1,7 @@
 import { MENU, root } from './elements.js';
 import { ROUTE_PATHNAMES } from '../controller/route.js';
 import * as Util from './util.js';
-import { getProductsCategoryList } from '../controller/firestore_controller.js';
+import { getAccountCurrency, getProductsCategoryList } from '../controller/firestore_controller.js';
 import { DEV } from '../model/constants.js';
 import { currentUser } from '../controller/firebase_auth.js';
 import { cart } from './cart_page.js';
@@ -19,6 +19,17 @@ export async function products_category_page() {
     let html = '<h1>'+c.toUpperCase()+'</h1>';
 
     try {
+
+        let global_curr = await getAccountCurrency(currentUser.uid);
+
+        if(global_curr == "USD") {
+            MENU.CurrencyChooser.value = "USD";
+        } else if(global_curr == "EUR") {
+            MENU.CurrencyChooser.value = "EUR";
+        } else if(global_curr == "") {
+            MENU.CurrencyChooser.value = "USD";
+        }
+
         products = await getProductsCategoryList(c);
 
         if (cart && cart.getTotalQty() != 0) {

@@ -2,7 +2,8 @@ import { MENU, root } from './elements.js';
 import { ROUTE_PATHNAMES } from '../controller/route.js';
 import * as Util from './util.js';
 import {getProductList, createComment, getAllComments, 
-    getSpecificProduct, addToWishlist, addToRatings,getUserRatings,getTotalRatings,updateProductRating } from '../controller/firestore_controller.js';
+    getSpecificProduct, addToWishlist, addToRatings,getUserRatings,
+    getTotalRatings,updateProductRating, getAccountCurrency } from '../controller/firestore_controller.js';
 import { DEV } from '../model/constants.js';
 import { currentUser } from '../controller/firebase_auth.js';
 import { cart } from './cart_page.js';
@@ -33,6 +34,8 @@ export async function product_page() {
     let user_rating_5 = "";
     let total_rating;
     try {
+        
+
         //products = await getProductList();
         products = await getSpecificProduct(c);
         user_rating = await getUserRatings(currentUser.uid, c);

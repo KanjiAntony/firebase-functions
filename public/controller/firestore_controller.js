@@ -201,6 +201,40 @@ export async function updateAccountInfo(uid, updateInfo) {
     await updateDoc(docRef, updateInfo);
 }
 
+export async function updateAccountCurrency(uid, currency) {
+
+    const docRef = doc(db, COLLECTION_NAMES.ACCOUNT_INFO, uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+
+        const user_currency = docSnap.data().currency;
+
+        const updateInfo = {...user_currency, currency};
+
+        await updateDoc(docRef, updateInfo);
+
+        Util.info('Success', 'Currency updated');
+
+    }
+}
+
+export async function getAccountCurrency(uid) {
+
+    const docRef = doc(db, COLLECTION_NAMES.ACCOUNT_INFO, uid);
+    const docSnap = await getDoc(docRef);
+
+    let user_currency;
+
+    if (docSnap.exists()) {
+
+        user_currency = docSnap.data().currency;
+
+    }
+
+    return user_currency;
+}
+
 export async function getWishlist(uid) {
     const docRef = doc(db, COLLECTION_NAMES.WISHLIST, uid);
     const docSnap = await getDoc(docRef);

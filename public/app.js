@@ -10,8 +10,11 @@ import * as EditMyProductsPage from './viewpage/edit_my_products_page.js'
 
 import {routing} from './controller/route.js'
 import { MENU } from './viewpage/elements.js'
+import { DEV } from './model/constants.js'
+import { getAccountCurrency } from './controller/firestore_controller.js'
 
 FirebaseAuth.addEventListeners();
+
 HomePage.addEventListeners();
 PurchasesPage.addEventListeners();
 CartPage.addEventListeners();
@@ -20,15 +23,7 @@ ProfilePage.addEventListeners();
 MyProductsPage.addEventListeners();
 EditMyProductsPage.addEventListeners();
 
-MENU.CurrencyChooser.addEventListener("change", e => {
 
-    if(e.target.value == "Eur") {
-
-        
-    }
-
-
-});
 
 window.onload = () => {
     const pathname = window.location.pathname;

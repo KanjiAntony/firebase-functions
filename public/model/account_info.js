@@ -7,6 +7,7 @@ export class AccountInfo {
         this.zip = data.zip;
         this.creditNo = data.creditNo;
         this.photoURL = data.photoURL;
+        this.currency = data.currency;
     }
 
     serialize(){
@@ -18,6 +19,7 @@ export class AccountInfo {
             zip: this.zip,
             creditNo: this.creditNo,
             photoURL: this.photoURL,
+            currency: this.currency,
         }
     }
 
@@ -26,6 +28,7 @@ export class AccountInfo {
             name: '', address: '', city: '',
             state: '',zip: '', creditNo: '',
             photoURL: 'images/default_profile.jpg',
+            currency: "USD"
         })
     }
 }
