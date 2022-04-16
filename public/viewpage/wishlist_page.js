@@ -140,5 +140,5 @@ export async function getUserWishlist() {
         info(`Empty wishlist`, JSON.stringify(e));
         return;
     }
-    MENU.WishlistItemCount.innerHTML = 0;
+
 }

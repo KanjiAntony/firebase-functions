@@ -361,6 +361,7 @@
 	
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js";
+    import { getMessaging,getToken,onMessage } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-messaging.js";
     /*const firebaseConfig = {
       apiKey: "AIzaSyBsR8OL9stvdOmQZW4N6EDQuT3f7wZ1DXs",
       authDomain: "cmsc5373-ramya-webserver.firebaseapp.com",
@@ -382,6 +383,49 @@
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
+
+    const messaging = getMessaging(app);
+
+    getToken(messaging, 
+    
+    { vapidKey: 
+      'BAlMt-1ylQoARKYPBn1QHGsnx0q6_zO7_9SJUldk0ff9_BTqSL3UNanf-BI5j5AteNCRTAjXulHo0wgzcKap1uo' 
+    })
+    .then((currentToken) => {
+        if (currentToken) {
+          console.log("Token ",currentToken);
+        } else {
+          // Show permission request UI
+          console.log('No registration token available. Request permission to generate one.');
+          // ...
+        }
+    }).catch((err) => {
+      console.log('An error occurred while retrieving token. ', err);
+    });
+
+    onMessage(messaging, (payload) => {
+      if(payload.collapseKey == null) {
+
+        console.log(payload.data);
+
+      } else {
+        console.log('Message received. ', payload.notification);
+      }
+
+    });
+  </script>
+
+  <script>
+
+// async function registerWorker() 
+// {
+//   console.log('Registering service worker');
+// const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {scope: '/'});
+
+// console.log('Registered service worker');
+  
+//   registerWorker().catch(error => console.error(error));}
+
   </script>
 
 

@@ -8,7 +8,6 @@ export const MENU = {
     Wishlist: document.getElementById('menu-wishlist'),
     Profile: document.getElementById('menu-profile'),
     CartItemCount: document.getElementById('menu-cart-item-count'),
-    WishlistItemCount: document.getElementById('menu-wishlist-item-count'),
     MyProducts: document.getElementById('menu-my-products'),
     CurrencyChooser: document.getElementById('choose-currency'),
     MyPromo: document.getElementById('menu-my-promo'),

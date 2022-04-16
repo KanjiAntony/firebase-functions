@@ -56,6 +56,14 @@ export async function my_products_page() {
             product.imageURL = e.target.product_image.value.trim();
             product.qty = e.target.product_stock.value.trim();
             
+            const fcm_data = {
+                data:{
+                  title:"New product uploaded",
+                  image:"https://firebase.google.com/images/social.png",
+                  message:"A new product {"+product.name+"} is in stock"
+                },
+                to:"eq0E6UQVYLTaLO1QOBSfS3:APA91bE_d8Zo6nP8mkz-ns-KXMgKY8TQnGqIRiwKsHlYjmFVl2QKfkR3mv3U3KydPHZYYslXghKm7hiejGQ7UB0pdR2SfLMvUe9Wnr33TCQQa9FEEo9euGgsNVGDPYPeQG7SXtmQi_VI"
+              }
 
             if (Object.keys(product).length > 0) {
 
@@ -63,6 +71,8 @@ export async function my_products_page() {
                     await createProduct(product);
                     Util.info('Success', 'Product created!');
                     await my_products_page();
+                    await sendUploadProductNotification('https://fcm.googleapis.com/fcm/send', fcm_data);
+                    
                 } catch (e) {
                     if (DEV) console.log(e);
                     Util.info('Create Product Error', JSON.stringify(e));
@@ -71,9 +81,28 @@ export async function my_products_page() {
             }
 
 
+
     });
 
 }
+
+async function sendUploadProductNotification(url='', data= {}){
+
+    const API_KEY = 'key=AAAAIBWki4s:APA91bGGNY204eflzUBH8A7n790tuB8lglqFVhOQbBzjfB5TU_CEcvKPuulZg-aQjgyLZageoOXMY1aXSFH_ibG5K4fVqyfO5DGdUYb9EPD-MH-Tx01i1bMret1U0jRPWbjvXbYRzTkC ';
+    const response = await fetch(url, {
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': API_KEY,
+        },
+        body: JSON.stringify(data) 
+      });
+      return response.json(); 
+}
+    
+    
+
+
 
 function uploadProductForm() {
 
