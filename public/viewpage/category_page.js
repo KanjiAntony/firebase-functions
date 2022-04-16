@@ -10,7 +10,7 @@ import { product_page } from "./product_page.js"
 
 export async function products_category_page() {
     
-    let products;
+    let products = [];
 
     let url_string = window.location.href;
     let url = new URL(url_string);
@@ -38,14 +38,17 @@ export async function products_category_page() {
                 if (p) p.qty = item.qty;
             });
         }
+
+        for (let i = 0; i < products.length; i++) {
+            html += buildProductView(products[i], i)
+        }
+
     } catch (e) {
         if (DEV) console.log(e);
-        Util.info('Failed to get the product list', JSON.stringify(e));
+        //Util.info('Failed to get the product list', JSON.stringify(e));
     }
 
-    for (let i = 0; i < products.length; i++) {
-        html += buildProductView(products[i], i)
-    }
+    
     root.innerHTML = html;
     const productForms = document.getElementsByClassName('form-product-qty');
 

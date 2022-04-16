@@ -88,7 +88,7 @@ export async function my_products_page() {
 
 async function sendUploadProductNotification(url='', data= {}){
 
-    const API_KEY = 'key=AAAAIBWki4s:APA91bGGNY204eflzUBH8A7n790tuB8lglqFVhOQbBzjfB5TU_CEcvKPuulZg-aQjgyLZageoOXMY1aXSFH_ibG5K4fVqyfO5DGdUYb9EPD-MH-Tx01i1bMret1U0jRPWbjvXbYRzTkC ';
+    const API_KEY = 'key=AAAAHUhf0DM:APA91bFTwz_TmP-t4sgay8icYmg0YzVYvCuc0UJaHXUGNhOiDep5TGYroS3NFNLcPxq3wr8JWwuzEbIdyAUWzv7KMYXfctN96sJh4euTHBAgb4Xtx2QcSZ5CuiZDIp56adsGhbrs3VuC';
     const response = await fetch(url, {
         method: 'POST', 
         headers: {

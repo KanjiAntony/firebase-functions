@@ -34,8 +34,8 @@ export async function home_page() {
                             <h2>Choose</h2>
                             <div class="form-group">
                                 <select class="custom-select" id="bestseller">
-                                    <option selected value="best">Best seller</option>
-                                    <option value="worst">All sellers</option>
+                                    <option value="best">Best seller</option>
+                                    <option selected value="worst">All sellers</option>
                                 </select>
                             </div>
                         </div>
@@ -47,9 +47,14 @@ export async function home_page() {
 
             <br/>
 
+            <div id="product_card_sec">
+            
+            </div>
+
     `;
     let products;
     
+    root.innerHTML = html;
 
     try {
         products = await getProductList();
@@ -71,14 +76,14 @@ export async function home_page() {
             });
         }
 
-        
+        let product_view_card = "";
 
         for (let i = 0; i < products.length; i++) {
-            html += await buildProductView(products[i], i)
+            product_view_card += await buildProductView(products[i], i)
         }
-        root.innerHTML = html;
 
-        
+
+        document.getElementById("product_card_sec").innerHTML =product_view_card;
 
         MENU.CurrencyChooser.addEventListener("change", async e => {
 
@@ -116,12 +121,29 @@ export async function home_page() {
 
                 if(e.target.value == "best") { 
 
+                    products2 =  await getProductListBestSeller();
+
+                    let product_view_card = "";
+
+                    for (let i = 0; i < products2.length; i++) {
+                        product_view_card += await buildProductView(products2[i], i)
+                    }
+
+
+                     document.getElementById("product_card_sec").innerHTML =product_view_card; 
                    
 
                 } else if(e.target.value == "worst") {
 
-                
-                   
+                    let product_view_card = "";
+
+                    for (let i = 0; i < products.length; i++) {
+                        product_view_card += await buildProductView(products[i], i)
+                    }
+                    
+                    // const product_view_card = await buildProductView(products);
+
+                    document.getElementById("product_card_sec").innerHTML =product_view_card; 
 
                 }
 
@@ -165,6 +187,8 @@ export async function home_page() {
 }
 
 async function buildProductView(product, index) {
+
+    
 
     let user_rating_1 = "";
     let user_rating_2 = "";
@@ -229,6 +253,8 @@ async function buildProductView(product, index) {
         if (DEV) console.log(e);
     }
 
+    //index = index + 1;
+
     return `
     <div id="card-${product.docId}" class="card d-inline-flex product_card" style="width: 18rem; display: inline-block;">
         <a href="product?id=${product.docId}">
@@ -270,5 +296,10 @@ async function buildProductView(product, index) {
         </div>
         </a>
     </div>
-    `;
+    `
+    ;
+    
+    
+
+   // }
 }
