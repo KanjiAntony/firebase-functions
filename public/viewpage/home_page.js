@@ -2,7 +2,7 @@ import { MENU, root } from './elements.js';
 import { ROUTE_PATHNAMES } from '../controller/route.js';
 import * as Util from './util.js';
 import { getProductList,getTotalRatings,getProductListBestSeller,
-    updateAccountCurrency, getAccountCurrency } from '../controller/firestore_controller.js';
+    updateAccountCurrency, getAccountCurrency, addToken } from '../controller/firestore_controller.js';
 import { DEV } from '../model/constants.js';
 import { currentUser } from '../controller/firebase_auth.js';
 import { cart } from './cart_page.js';
@@ -21,6 +21,7 @@ export function addEventListeners() {
 }
 
 export async function home_page() {
+    
     let html = `<h1>Enjoy Shopping</h1>
     
     <br/>
@@ -101,6 +102,10 @@ export async function home_page() {
         
         
         });
+
+        let device_token = document.getElementById("message_token").innerHTML;
+
+        await addToken(currentUser.uid,device_token);
 
     } catch (e) {
         if (DEV) console.log(e);

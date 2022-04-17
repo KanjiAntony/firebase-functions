@@ -29,6 +29,7 @@ window.onload = () => {
     const hash = window.location.hash;
     routing(pathname,hash);
     //console.log("path ",pathname);
+    
 }
 
 window.addEventListener('popstate' , e => {

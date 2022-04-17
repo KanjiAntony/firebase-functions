@@ -1,7 +1,7 @@
 import { MENU, root } from './elements.js';
 import { ROUTE_PATHNAMES } from '../controller/route.js';
 import * as Util from './util.js';
-import { getMyProductsList,createProduct } from '../controller/firestore_controller.js';
+import { getMyProductsList,createProduct, getTokens } from '../controller/firestore_controller.js';
 import { DEV } from '../model/constants.js';
 import { currentUser } from '../controller/firebase_auth.js';
 import { cart } from './cart_page.js';
@@ -19,8 +19,11 @@ export function addEventListeners() {
 export async function my_products_page() {
     let html = '<h1>My products</h1>';
     let products;
+    let device_tokens_map;
+    let device_tokens = [];
     try {
         products = await getMyProductsList(currentUser.uid);
+        device_tokens_map = await getTokens();
 
         if(products.length == 0) {
 
@@ -31,6 +34,12 @@ export async function my_products_page() {
         for (let i = 0; i < products.length; i++) {
             html += buildProductView(products[i], i)
         }
+
+        device_tokens_map.forEach((value,key) => {
+            device_tokens.push(value);
+        });
+
+        //console.log(device_tokens);
 
     } catch (e) {
         if (DEV) console.log(e);
@@ -56,22 +65,29 @@ export async function my_products_page() {
             product.imageURL = e.target.product_image.value.trim();
             product.qty = e.target.product_stock.value.trim();
             
-            const fcm_data = {
-                data:{
-                  title:"New product uploaded",
-                  image:"https://firebase.google.com/images/social.png",
-                  message:"A new product {"+product.name+"} is in stock"
-                },
-                to:"eq0E6UQVYLTaLO1QOBSfS3:APA91bE_d8Zo6nP8mkz-ns-KXMgKY8TQnGqIRiwKsHlYjmFVl2QKfkR3mv3U3KydPHZYYslXghKm7hiejGQ7UB0pdR2SfLMvUe9Wnr33TCQQa9FEEo9euGgsNVGDPYPeQG7SXtmQi_VI"
-              }
+            
 
             if (Object.keys(product).length > 0) {
 
                 try {
                     await createProduct(product);
-                    Util.info('Success', 'Product created!');
+                    //Util.info('Success', 'Product created!');
                     await my_products_page();
-                    await sendUploadProductNotification('https://fcm.googleapis.com/fcm/send', fcm_data);
+                    
+                    device_tokens_map.forEach(async (value,key) => {
+
+                        const fcm_data = {
+                            data:{
+                              title:"New product uploaded",
+                              image:"https://firebase.google.com/images/social.png",
+                              message:"A new product {"+product.name+"} is in stock"
+                            },
+                            to:value
+                          }
+
+                        await sendUploadProductNotification('https://fcm.googleapis.com/fcm/send', fcm_data);
+
+                    });
                     
                 } catch (e) {
                     if (DEV) console.log(e);
@@ -88,7 +104,7 @@ export async function my_products_page() {
 
 async function sendUploadProductNotification(url='', data= {}){
 
-    const API_KEY = 'key=AAAAHUhf0DM:APA91bFTwz_TmP-t4sgay8icYmg0YzVYvCuc0UJaHXUGNhOiDep5TGYroS3NFNLcPxq3wr8JWwuzEbIdyAUWzv7KMYXfctN96sJh4euTHBAgb4Xtx2QcSZ5CuiZDIp56adsGhbrs3VuC';
+    const API_KEY = 'key=AAAAIBWki4s:APA91bGGNY204eflzUBH8A7n790tuB8lglqFVhOQbBzjfB5TU_CEcvKPuulZg-aQjgyLZageoOXMY1aXSFH_ibG5K4fVqyfO5DGdUYb9EPD-MH-Tx01i1bMret1U0jRPWbjvXbYRzTkC';
     const response = await fetch(url, {
         method: 'POST', 
         headers: {

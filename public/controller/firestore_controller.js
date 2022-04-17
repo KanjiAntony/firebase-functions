@@ -11,6 +11,7 @@ import { ShoppingCart } from "../model/shopping_cart.js";
 import { Wishlist } from "../model/wishlist.js";
 import * as Util from '../viewpage/util.js';
 import { Rating } from "../model/ratings.js";
+import { DeviceTokens } from "../model/device_tokens.js";
 
 const db = getFirestore();
 
@@ -286,7 +287,7 @@ export async function getUserPromoValue(uid, promo_code) {
                 return fetched_user_promo_map.get(promo_code);
 
             } else {
-                return "0";
+                return "100";
             }
         
     } 
@@ -391,6 +392,78 @@ export async function updateProductRating(rating, prod_id) {
         await updateDoc(docRef, updateInfo);
 
     }
+}
+
+export async function addToken(uid, token) {
+
+
+    const docRef = doc(db, COLLECTION_NAMES.DEVICE_TOKENS, "tokens");
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+
+            const user_ratings_items = docSnap.data().items;
+           
+
+            const fetched_user_rate_map = new Map(Object.entries(user_ratings_items))
+            
+            const has_user_rated = fetched_user_rate_map.has(uid);
+
+            if(has_user_rated) {
+
+                   const updated_user_rate_info_map = fetched_user_rate_map.set(uid,token);
+                   const updated_user_rate_info_object = Object.fromEntries(
+                        updated_user_rate_info_map
+                   );
+
+                   const updateInfo = {"items": updated_user_rate_info_object};
+                    await updateDoc(docRef, updateInfo);
+
+            } else {
+
+                    const updated_user_rate_info_map = fetched_user_rate_map.set(uid,token);
+                   const updated_user_rate_info_object = Object.fromEntries(
+                        updated_user_rate_info_map
+                   );
+
+                   const updateInfo = {"items": updated_user_rate_info_object};
+                    await updateDoc(docRef, updateInfo);
+
+            }
+
+        
+
+    } else {
+
+        const items = new Map();
+        items.set(uid, token);
+
+        const raw_rating = new DeviceTokens(Object.fromEntries(items));
+        const data = raw_rating.serialize();
+
+        const ratingDocRef = doc(db, COLLECTION_NAMES.DEVICE_TOKENS, "tokens");
+        await setDoc(ratingDocRef, data);
+    }
+
+}
+
+export async function getTokens() {
+
+
+    const docRef = doc(db, COLLECTION_NAMES.DEVICE_TOKENS, "tokens");
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+
+            const user_ratings_items = docSnap.data().items;
+
+            const fetched_user_rate_map = new Map(Object.entries(user_ratings_items))
+            
+            return fetched_user_rate_map;
+
+        
+
+    } 
 }
 
 export async function addToRatings(uid, product_id, rating) {

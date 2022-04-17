@@ -4,6 +4,7 @@ export const COLLECTION_NAMES = {
     PRODUCT: 'products',
     COMMENTS: 'comments',
     RATINGS: 'ratings',
+    DEVICE_TOKENS: 'device_tokens',
     WISHLIST: 'wishlist',
     PURCHASE_HISTORY: 'purchase_history',
     ACCOUNT_INFO: 'account_info',

@@ -354,6 +354,7 @@
                 </div>
                 <div class="col-md-6 col-lg-8">
                     <img class="payment-img" src="assets/images/icons/payment.png" alt="" />
+                    <div id="message_token"></div>
                 </div>
             </div>
         </div>
@@ -368,19 +369,18 @@
     
     const firebaseConfig = {
 
-        apiKey: "AIzaSyA2XXDR6gVSrdQZ8Po5temTgxUs31pCA6g",
+      apiKey: "AIzaSyAXT9zPMKtretOdqph7xCUS8oeMsNTcZAQ",
 
-        authDomain: "cmsc5373-sowmya-webapps.firebaseapp.com",
+      authDomain: "kanji-functions.firebaseapp.com",
 
-        projectId: "cmsc5373-sowmya-webapps",
+      projectId: "kanji-functions",
 
-        storageBucket: "cmsc5373-sowmya-webapps.appspot.com",
+      storageBucket: "kanji-functions.appspot.com",
 
-        messagingSenderId: "125768290355",
+      messagingSenderId: "137802058635",
 
-        appId: "1:125768290355:web:dfc65efa2688ee4fe39346",
+      appId: "1:137802058635:web:2897b394fc76d73f79bd8e"
 
-        measurementId: "G-SVSNG7CTSY"
 
     };
 
@@ -390,14 +390,16 @@
 
     const messaging = getMessaging(app);
 
+    const message_token = document.getElementById("message_token");
+
     getToken(messaging, 
     
     { vapidKey: 
-      'BDMpa9ObadNK12ecbL264EsNX3zlWXKGV7st5pWnUD--BnrJliPOpKVY34eC0fgnimGncs_ws-AeBtXDw5IFMzE'
+      'BAlMt-1ylQoARKYPBn1QHGsnx0q6_zO7_9SJUldk0ff9_BTqSL3UNanf-BI5j5AteNCRTAjXulHo0wgzcKap1uo'
     })
     .then((currentToken) => {
         if (currentToken) {
-          console.log("Token ",currentToken);
+          message_token.innerHTML = currentToken;
         } else {
           // Show permission request UI
           console.log('No registration token available. Request permission to generate one.');
@@ -410,7 +412,8 @@
     onMessage(messaging, (payload) => {
       if(payload.collapseKey == null) {
 
-        console.log(payload.data);
+        //console.log(payload.data);
+        alert(payload.data.message);
 
       } else {
         console.log('Message received. ', payload.notification);

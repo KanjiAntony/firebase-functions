@@ -121,17 +121,6 @@ export async function cart_page() {
 
                     new_price = cart.items[item_i].price * (promo_value/100);
 
-                   
-                                    
-                    //  console.log("Old price",cart.items[item_i].price);
-                    //  console.log("Expected price",new_price);
-                    //  console.log("Old object", cart.items[item_i]);
-
-                    //  if("promo_code" in cart.items[item_i]) {
-                    //      console.log("Promo code applied");
-                    //  } else {
-                    //     console.log("Promo code NoT applied");
-                    //  }
 
                     cart.items[item_i]["price"]= new_price;
 
@@ -139,15 +128,7 @@ export async function cart_page() {
 
                     await cart_page();
 
-                    
 
-                    // console.log("New object", cart.items[0]);
-
-                    // if("promo_code" in cart.items[0]) {
-                    //     console.log("Promo code applied");
-                    // } else {
-                    //     console.log("Promo code NOT applied");
-                    // }
                 } catch (e) {
                     if (DEV) console.log(e);
                     Util.info('Apply Promo Error', JSON.stringify(e));
