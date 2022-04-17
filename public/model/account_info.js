@@ -8,6 +8,7 @@ export class AccountInfo {
         this.creditNo = data.creditNo;
         this.photoURL = data.photoURL;
         this.currency = data.currency;
+        this.points = data.points ? typeof data.points == 'number' ? data.points : Number(data.points) : 0;
         this.promos = data.promos;
     }
 
@@ -21,6 +22,7 @@ export class AccountInfo {
             creditNo: this.creditNo,
             photoURL: this.photoURL,
             currency: this.currency,
+            points: this.points,
             promos: this.promos,
         }
     }
@@ -34,6 +36,7 @@ export class AccountInfo {
             state: '',zip: '', creditNo: '',
             photoURL: 'images/default_profile.jpg',
             currency: "USD",
+            points: 0,
             promos: prom_obj,
         })
     }

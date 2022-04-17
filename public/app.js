@@ -9,9 +9,7 @@ import * as MyProductsPage from './viewpage/my_products_page.js'
 import * as MyPromoPage from './viewpage/my_promo_page.js'
 
 import {routing} from './controller/route.js'
-import { MENU } from './viewpage/elements.js'
-import { DEV } from './model/constants.js'
-import { getAccountCurrency } from './controller/firestore_controller.js'
+import  * as MyPointsPage from './viewpage/my_points.js'
 
 FirebaseAuth.addEventListeners();
 
@@ -22,6 +20,7 @@ WishlistPage.addEventListeners();
 ProfilePage.addEventListeners();
 MyProductsPage.addEventListeners();
 MyPromoPage.addEventListeners();
+MyPointsPage.addEventListeners();
 
 
 window.onload = () => {

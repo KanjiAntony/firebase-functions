@@ -323,6 +323,40 @@ export async function getUserPromoValue(uid, promo_code) {
 
 }
 
+export async function updateAccountPoints(uid, points) {
+
+    const docRef = doc(db, COLLECTION_NAMES.ACCOUNT_INFO, uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+
+        const user_points = docSnap.data().points;
+
+        const updateInfo = {...user_points, points};
+
+        await updateDoc(docRef, updateInfo);
+
+       // Util.info('Success', 'Points updated');
+
+    }
+}
+
+export async function getAccountPoints(uid) {
+
+    const docRef = doc(db, COLLECTION_NAMES.ACCOUNT_INFO, uid);
+    const docSnap = await getDoc(docRef);
+
+    let user_points;
+
+    if (docSnap.exists()) {
+
+        user_points = docSnap.data().points;
+
+    }
+
+    return user_points;
+}
+
 export async function updateAccountCurrency(uid, currency) {
 
     const docRef = doc(db, COLLECTION_NAMES.ACCOUNT_INFO, uid);

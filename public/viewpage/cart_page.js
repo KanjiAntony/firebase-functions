@@ -5,7 +5,7 @@ import { currentUser } from '../controller/firebase_auth.js';
 import { currency,disableButton,enableButton, info } from './util.js';
 import { home_page } from './home_page.js';
 import { DEV } from '../model/constants.js';
-import { checkout,getUserPromoValue } from '../controller/firestore_controller.js';
+import { checkout,getAccountPoints,getUserPromoValue, updateAccountPoints } from '../controller/firestore_controller.js';
 
 export function addEventListeners() {
     MENU.Cart.addEventListener('click', async () => {
@@ -29,6 +29,17 @@ export async function cart_page() {
         return;
     }
 
+    let user_points;
+
+    try {
+
+        user_points = await getAccountPoints(currentUser.uid);
+
+    } catch(e) {
+
+        if(DEV) console.log(e);
+
+    }
 
 
     html = `
@@ -84,13 +95,22 @@ export async function cart_page() {
         item_index ++;
     });
 
+    let cart_points = cart.getTotalPrice()/10;  
+
+    let total_points = user_points + cart_points;
 
     html += '</tbody></table>';
     html += `
     <div class="fs-3"> TOTAL: ${currency(cart.getTotalPrice())}</div>
+    <br>
+    <hr/>
+    <br/>
+    <div class="fs-3"> POINTS EARNED ($10 = 1 point): ${cart_points}</div>
+    <br/>
     `;
     html+=`
     <button id="button-checkout" class="btn btn-outline-primary">Check Out</button>
+    <button id="button-checkout-points" class="btn btn-outline-danger">Points Check Out</button>
     <button id="button-continue-shopping" class="btn btn-outline-secondary">Continue Shopping</button>
     `;
     root.innerHTML = html;
@@ -151,6 +171,7 @@ export async function cart_page() {
         const label = disableButton(checkoutButton);
         try{
             await checkout(cart);
+            await updateAccountPoints(currentUser.uid,total_points);
             info('Success!','Checkout Complete!');
             cart.clear();
             MENU.CartItemCount.innerHTML = 0;
@@ -161,6 +182,42 @@ export async function cart_page() {
             info('Checkout Failed', JSON.stringify(e));
         }
         enableButton(checkoutButton,label);
+    });
+
+    const checkoutPointsButton = document.getElementById('button-checkout-points');
+    checkoutPointsButton.addEventListener('click',async()=>{
+        const label = disableButton(checkoutPointsButton);
+
+        let final_points;
+
+
+        try{
+
+            if(user_points < cart_points) {
+                info('Low points!','Your wallet points are so low. Cannot checkout!');
+                //console.log("Points in your wallet are so low");
+            } else {
+    
+                final_points = user_points - cart_points;
+    
+                //console.log("Remaining amount in wallet",final_points);
+
+                await checkout(cart);
+                await updateAccountPoints(currentUser.uid,final_points);
+                info('Success!','Checkout Complete!');
+                cart.clear();
+                MENU.CartItemCount.innerHTML = 0;
+                history.pushState(null,null,ROUTE_PATHNAMES.HOME);
+                await home_page();
+    
+            }
+
+            
+        } catch(e){
+            if(DEV) console.log(e);
+            info('Checkout Failed', JSON.stringify(e));
+        }
+        enableButton(checkoutPointsButton,label);
     });
 }
 
