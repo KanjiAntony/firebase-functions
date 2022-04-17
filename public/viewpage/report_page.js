@@ -3,11 +3,11 @@ import { ROUTE_PATHNAMES } from '../controller/route.js';
 import * as Util from './util.js';
 import {getProductList, createComment, getAllComments, 
     getSpecificProduct, addToWishlist, addToRatings,getUserRatings,
-    getTotalRatings,updateProductRating, getAccountCurrency } from '../controller/firestore_controller.js';
+    getTotalRatings,updateProductRating, getAccountCurrency, createReport } from '../controller/firestore_controller.js';
 import { DEV } from '../model/constants.js';
 import { currentUser } from '../controller/firebase_auth.js';
 import { cart } from './cart_page.js';
-import { home_page } from "../viewpage/home_page.js"
+import { home_page } from "./home_page.js"
 
 export function addEventListeners() {
     MENU.Home.addEventListener('click', async () => {
@@ -18,13 +18,13 @@ export function addEventListeners() {
     });
 } 
 
-export async function product_page() {
+export async function report_page() {
 
     let url_string = window.location.href;
     let url = new URL(url_string);
     let c = url.searchParams.get('id');
 
-    let html = '<h1>Product page</h1>';
+    let html = '<h1>Product report page</h1>';
     let products;
     let user_rating;
     let user_rating_1 = "";
@@ -103,11 +103,10 @@ export async function product_page() {
         }
 
         html += buildRichProdView(products, c, user_rating_1,user_rating_2,
-            user_rating_3,user_rating_4,user_rating_5,total_rating,c);
+            user_rating_3,user_rating_4,user_rating_5,total_rating);
 
             root.innerHTML = html;
 
-            await buildCommentView(c);    
 
     } catch (e) {
         if (DEV) console.log(e);
@@ -143,31 +142,29 @@ export async function product_page() {
         })
     }
 
-    document.getElementById('form-create-comment').addEventListener('submit', async e => {
+    document.getElementById('form-create-report').addEventListener('submit', async e => {
         e.preventDefault();
       
-            const comment = {};
+            const report = {};
 
-            comment.productId = c;
+            report.productId = c;
             const date = new Date();
-            comment.date = date.getDate() + ' / ' + date.getMonth() + ' / ' + date.getFullYear() + '   at ' + date.getHours() + ' : ' + date.getMinutes(),
+            report.date = date.getDate() + ' / ' + date.getMonth() + ' / ' + date.getFullYear() + '   at ' + date.getHours() + ' : ' + date.getMinutes(),
 
-            comment.name = e.target.name.value.trim();
-            comment.comment = e.target.comment.value.trim();
+            report.name = e.target.name.value.trim();
+            report.report = e.target.report.value.trim();
 
-           // console.log(comment);
+           // console.log(report);
             
 
-            if (Object.keys(comment).length > 0) {
+            if (Object.keys(report).length > 0) {
 
                 try {
-                    await createComment(comment);
-
-                    await buildCommentView(c);
-
+                    await createReport(report);
+                    Util.info('Success', "Thank you for your report");
                 } catch (e) {
                     if (DEV) console.log(e);
-                    Util.info('Create Comment Error', JSON.stringify(e));
+                    Util.info('Create Report Error', JSON.stringify(e));
                 }
                 
             }
@@ -177,147 +174,12 @@ export async function product_page() {
 
     });
 
-    document.getElementById('add_to_wishlist').addEventListener('click', async e => {
-          
-
-                try {
-                    await addToWishlist(currentUser.uid, c);
-                    
-                } catch (e) {
-                    if (DEV) console.log(e);
-                    Util.info('Add To Wishlist Error', JSON.stringify(e));
-                }
-                
-            
-
-    });
-
-    document.getElementById('rating-1').addEventListener('click', async e => {
-          
-        const rating_value = 1;
-
-
-        try {
-            await addToRatings(currentUser.uid, c, rating_value);
-            await product_page();
-        } catch (e) {
-            if (DEV) console.log(e);
-            Util.info('Add To Ratings Error', JSON.stringify(e));
-        }
-        
-    });
-
-    document.getElementById('rating-2').addEventListener('click', async e => {
-          
-        const rating_value = 2;
-
-
-        try {
-            await addToRatings(currentUser.uid, c, rating_value);
-            await product_page();
-        } catch (e) {
-            if (DEV) console.log(e);
-            Util.info('Add To Ratings Error', JSON.stringify(e));
-        }
-        
-    });
-
-    document.getElementById('rating-3').addEventListener('click', async e => {
-          
-        const rating_value = 3;
-
-
-        try {
-            await addToRatings(currentUser.uid, c, rating_value);
-            await product_page();
-        } catch (e) {
-            if (DEV) console.log(e);
-            Util.info('Add To Ratings Error', JSON.stringify(e));
-        }
-        
-    });
-
-    document.getElementById('rating-4').addEventListener('click', async e => {
-          
-        const rating_value = 4;
-
-
-        try {
-            await addToRatings(currentUser.uid, c, rating_value);
-            await product_page();
-        } catch (e) {
-            if (DEV) console.log(e);
-            Util.info('Add To Ratings Error', JSON.stringify(e));
-        }
-        
-    });
-
-    document.getElementById('rating-5').addEventListener('click', async e => {
-          
-        const rating_value = 5;
-
-
-        try {
-            await addToRatings(currentUser.uid, c, rating_value);
-            await product_page();
-        } catch (e) {
-            if (DEV) console.log(e);
-            Util.info('Add To Ratings Error', JSON.stringify(e));
-        }
-        
-    });
-
-
-}
-
-async function buildCommentView(c) {
-
-    let productComments;
-    let html_comments = '<h1>Comments</h1>';
-    let comments_table_container = document.getElementsByClassName("comments_table_container")[0];
-    try {
-        productComments = await getAllComments(c);
-        if (productComments.length == 0) {
-            html_comments += `<h3>No Comments Found!</h3>`;
-            comments_table_container.innerHTML = html_comments;
-            return;
-        }
-    } catch (e) {
-        if (DEV) console.log(e);
-        Util.info('Error in getComments', JSON.stringify(e));
-        return;
-    }
-
-    html_comments += `
-    <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Comment</th>
-      <th scope="col">Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    `;
-
-    for (let i = 0; i < productComments.length; i++) {
-        html_comments += `
-        <tr>
-
-            <td>${productComments[i].comment} <p><strong>by ${productComments[i].name}</strong></p></td>
-            <td>${productComments[i].date}</td>
-        </tr>    
-        `
-    }
-
-    html_comments += '<tbody></table>';
-
-    comments_table_container.innerHTML = html_comments;
 
 }
 
 function buildRichProdView(product, index, 
     user_rating_1,user_rating_2,user_rating_3,
-    user_rating_4,user_rating_5,total_rating,c) {
+    user_rating_4,user_rating_5,total_rating) {
 
     return  `
 
@@ -373,8 +235,6 @@ function buildRichProdView(product, index,
 
                                 <br/>
 
-                                    <button class="btn btn-primary" id="add_to_wishlist">Add to wishlist</button>
-
                                     
 
                                 
@@ -394,9 +254,7 @@ function buildRichProdView(product, index,
                                                     (${total_rating} ratings)
                                                 </div>
                               
-                                <br/>
 
-                                <a href="report?id=${c}" class="btn btn-danger" >Report issue</a>
                                 
                             </div>
                         </div>
@@ -420,26 +278,22 @@ function buildRichProdView(product, index,
                                 <div class="col-lg-12 col-md-12">
                                     <div class="contact-form">
                                         <div class="contact-title mb-30">
-                                            <h2>Leave a comment</h2>
+                                            <h2>Leave a report to fix issue</h2>
                                         </div>
-                                        <form class="contact-form-style" id="form-create-comment" method="post">
+                                        <form class="contact-form-style" id="form-create-report" method="post">
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <input name="name" placeholder="Name*" type="text" />
                                                 </div>
 
                                                 <div class="col-lg-12">
-                                                    <textarea name="comment" placeholder="Your  Comment*"></textarea>
-                                                    <button class="submit" type="submit">Comment</button>
+                                                    <textarea name="report" placeholder="Your  report*"></textarea>
+                                                    <button class="submit" type="submit">Report</button>
                                                 </div>
                                             </div>
                                         </form>
                                         <p class="form-messege"></p>
                                     </div>
-                                </div>
-
-                                <div class="comments_table_container">
-                                    
                                 </div>
 
                             </div>

@@ -12,6 +12,7 @@ import { Wishlist } from "../model/wishlist.js";
 import * as Util from '../viewpage/util.js';
 import { Rating } from "../model/ratings.js";
 import { DeviceTokens } from "../model/device_tokens.js";
+import { Report } from "../model/reports.js";
 
 const db = getFirestore();
 
@@ -32,6 +33,34 @@ export async function getProductList() {
 export async function getProductListBestSeller() {
     const products = [];
     const q = query(collection(db, COLLECTION_NAMES.PRODUCT), orderBy('rating', "desc"));
+    const snapShot = await getDocs(q);
+
+    snapShot.forEach(doc => {
+        const p = new Product(doc.data());
+        p.set_docId(doc.id);
+        products.push(p);
+
+    });
+    return products;
+}
+
+export async function getProductListHighPrice() {
+    const products = [];
+    const q = query(collection(db, COLLECTION_NAMES.PRODUCT), orderBy('price', "desc"));
+    const snapShot = await getDocs(q);
+
+    snapShot.forEach(doc => {
+        const p = new Product(doc.data());
+        p.set_docId(doc.id);
+        products.push(p);
+
+    });
+    return products;
+}
+
+export async function getProductListLowPrice() {
+    const products = [];
+    const q = query(collection(db, COLLECTION_NAMES.PRODUCT), orderBy('price'));
     const snapShot = await getDocs(q);
 
     snapShot.forEach(doc => {
@@ -611,6 +640,26 @@ export async function getAllComments(productId) {
     const productComments = [];
     snapShot.forEach(doc => {
         const sc = new Comment(doc.data());
+        productComments.push(sc);
+    });
+    return productComments;
+}
+
+export async function createReport(comment) {
+    const raw_comment = new Report(comment);
+    const data = raw_comment.serialize();
+    await addDoc(collection(db, COLLECTION_NAMES.REPORTS), data);
+}
+
+export async function getAllReports(productId) {
+    const q = query(collection(db, COLLECTION_NAMES.REPORTS),
+        where('productId', '==', productId),
+        orderBy('date', 'desc'));
+    const snapShot = await getDocs(q);
+
+    const productComments = [];
+    snapShot.forEach(doc => {
+        const sc = new Report(doc.data());
         productComments.push(sc);
     });
     return productComments;

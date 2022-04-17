@@ -3,6 +3,7 @@ export const DEV = true;
 export const COLLECTION_NAMES = {
     PRODUCT: 'products',
     COMMENTS: 'comments',
+    REPORTS: 'reports',
     RATINGS: 'ratings',
     DEVICE_TOKENS: 'device_tokens',
     WISHLIST: 'wishlist',

@@ -191,6 +191,7 @@ function buildProductView(product, index) {
                     </div>
                     <button class="btn btn-outline-danger" type="submit"
                         onclick="this.form.submitter='INC'">&plus;</button>
+                    <a href="fix-issue?id=${product.docId}" class="btn btn-danger" >View reports issued</a>    
                 </form>
             </div>
         </div>

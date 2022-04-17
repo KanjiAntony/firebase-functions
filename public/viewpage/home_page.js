@@ -1,7 +1,7 @@
 import { MENU, root } from './elements.js';
 import { ROUTE_PATHNAMES } from '../controller/route.js';
 import * as Util from './util.js';
-import { getProductList,getTotalRatings,getProductListBestSeller,
+import { getProductList,getTotalRatings,getProductListBestSeller,getProductListHighPrice,getProductListLowPrice,
     updateAccountCurrency, getAccountCurrency, addToken } from '../controller/firestore_controller.js';
 import { DEV } from '../model/constants.js';
 import { currentUser } from '../controller/firebase_auth.js';
@@ -29,18 +29,27 @@ export async function home_page() {
                 <div class="body">
                     <div class="row">
 
-                        <div class="col-lg-4 col-md-4 col-sm-6">
+                        <div class="col-lg-2 col-md-4 col-sm-6">
                         </div>
-                        <div class="col-lg-5 col-md-4 col-sm-6">
-                            <h2>Choose</h2>
+                        <div class="col-lg-5 col-md-5 col-sm-6">
+                            <h2>Filter by</h2>
                             <div class="form-group">
                                 <select class="custom-select" id="bestseller">
-                                    <option value="best">Best seller</option>
                                     <option selected value="worst">All sellers</option>
+                                    <option value="best">Best seller</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="col-lg-5 col-md-5 col-sm-6">
+
+                            <h2>Sort by</h2>
+                            <div class="form-group">
+                                <select class="custom-select" id="price-range">
+                                    <option value="high">High price</option>
+                                    <option selected value="low">Low price</option>
+                                </select>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -147,6 +156,55 @@ export async function home_page() {
                     }
                     
                     // const product_view_card = await buildProductView(products);
+
+                    document.getElementById("product_card_sec").innerHTML =product_view_card; 
+
+                }
+
+                
+
+            } catch (e) {
+                if (DEV) console.log(e);
+                Util.info('Failed to get sorted product list', JSON.stringify(e));
+            }
+
+    });
+
+    document.getElementById("price-range").addEventListener("change", async e => {
+
+        //console.log(e.target.value);
+        e.preventDefault();
+
+        let products2;
+        let products3;
+        //let html = ""
+
+            try {
+
+                if(e.target.value == "high") { 
+
+                    products2 =  await getProductListHighPrice();
+
+                    let product_view_card = "";
+
+                    for (let i = 0; i < products2.length; i++) {
+                        product_view_card += await buildProductView(products2[i], i)
+                    }
+
+
+                    document.getElementById("product_card_sec").innerHTML =product_view_card; 
+                   
+
+                } else if(e.target.value == "low") {
+
+                    products3 =  await getProductListLowPrice();
+
+                    let product_view_card = "";
+
+                    for (let i = 0; i < products3.length; i++) {
+                        product_view_card += await buildProductView(products3[i], i)
+                    }
+
 
                     document.getElementById("product_card_sec").innerHTML =product_view_card; 
 
