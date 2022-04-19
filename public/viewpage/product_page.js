@@ -35,65 +35,135 @@ export async function product_page() {
     let total_rating;
     let product_stock_left;
     let stock_state = "";
+
+    let is_user_logged;
+
+    if(currentUser != null) {
+        is_user_logged = true;
+    } else {
+        is_user_logged = false;
+    }
+
     try {
+    
         
 
-        //products = await getProductList();
         products = await getSpecificProduct(c);
-        user_rating = await getUserRatings(currentUser.uid, c);
-        total_rating = await getTotalRatings(currentUser.uid, c);
-
-        await updateProductRating(total_rating, c);
+        
+        total_rating = await getTotalRatings("", c);
 
         product_stock_left = await getSpecificProductStock(c);
 
-        if(user_rating == 0) {
+        if(is_user_logged) {
+            console.log("Is ogged yes");
 
-            user_rating_1 = "";
-            user_rating_2 = "";
-            user_rating_3 = "";
-            user_rating_4 = "";
-            user_rating_5 = "";
+            await updateProductRating(total_rating, c);
 
-        } else if(user_rating == 1) {
+            user_rating = await getUserRatings(currentUser.uid, c);
 
-            user_rating_1 = "star-rating-checked";
-            user_rating_2 = "";
-            user_rating_3 = "";
-            user_rating_4 = "";
-            user_rating_5 = "";
+            if(user_rating == 0) {
 
-        } else if(user_rating == 2) {
+                user_rating_1 = "";
+                user_rating_2 = "";
+                user_rating_3 = "";
+                user_rating_4 = "";
+                user_rating_5 = "";
 
-            user_rating_1 = "star-rating-checked";
-            user_rating_2 = "star-rating-checked";
-            user_rating_3 = "";
-            user_rating_4 = "";
-            user_rating_5 = "";
+            } else if(user_rating == 1) {
 
-        } else if(user_rating == 3) {
+                user_rating_1 = "star-rating-checked";
+                user_rating_2 = "";
+                user_rating_3 = "";
+                user_rating_4 = "";
+                user_rating_5 = "";
 
-            user_rating_1 = "star-rating-checked";
-            user_rating_2 = "star-rating-checked";
-            user_rating_3 = "star-rating-checked";
-            user_rating_4 = "";
-            user_rating_5 = "";
+            } else if(user_rating == 2) {
 
-        } else if(user_rating == 4) {
+                user_rating_1 = "star-rating-checked";
+                user_rating_2 = "star-rating-checked";
+                user_rating_3 = "";
+                user_rating_4 = "";
+                user_rating_5 = "";
 
-            user_rating_1 = "star-rating-checked";
-            user_rating_2 = "star-rating-checked";
-            user_rating_3 = "star-rating-checked";
-            user_rating_4 = "star-rating-checked";
-            user_rating_5 = "";
+            } else if(user_rating == 3) {
 
-        } else if(user_rating == 5) {
+                user_rating_1 = "star-rating-checked";
+                user_rating_2 = "star-rating-checked";
+                user_rating_3 = "star-rating-checked";
+                user_rating_4 = "";
+                user_rating_5 = "";
 
-            user_rating_1 = "star-rating-checked";
-            user_rating_2 = "star-rating-checked";
-            user_rating_3 = "star-rating-checked";
-            user_rating_4 = "star-rating-checked";
-            user_rating_5 = "star-rating-checked";
+            } else if(user_rating == 4) {
+
+                user_rating_1 = "star-rating-checked";
+                user_rating_2 = "star-rating-checked";
+                user_rating_3 = "star-rating-checked";
+                user_rating_4 = "star-rating-checked";
+                user_rating_5 = "";
+
+            } else if(user_rating == 5) {
+
+                user_rating_1 = "star-rating-checked";
+                user_rating_2 = "star-rating-checked";
+                user_rating_3 = "star-rating-checked";
+                user_rating_4 = "star-rating-checked";
+                user_rating_5 = "star-rating-checked";
+
+            }
+        
+        } else {
+
+            console.log("Is ogged no");
+
+            if(total_rating == 0) {
+
+                user_rating_1 = "";
+                user_rating_2 = "";
+                user_rating_3 = "";
+                user_rating_4 = "";
+                user_rating_5 = "";
+        
+            } else if(total_rating == 1) {
+        
+                user_rating_1 = "star-rating-checked";
+                user_rating_2 = "";
+                user_rating_3 = "";
+                user_rating_4 = "";
+                user_rating_5 = "";
+        
+            } else if(total_rating == 2) {
+        
+                user_rating_1 = "star-rating-checked";
+                user_rating_2 = "star-rating-checked";
+                user_rating_3 = "";
+                user_rating_4 = "";
+                user_rating_5 = "";
+        
+            } else if(total_rating == 3) {
+        
+                user_rating_1 = "star-rating-checked";
+                user_rating_2 = "star-rating-checked";
+                user_rating_3 = "star-rating-checked";
+                user_rating_4 = "";
+                user_rating_5 = "";
+        
+            } else if(total_rating == 4) {
+        
+                user_rating_1 = "star-rating-checked";
+                user_rating_2 = "star-rating-checked";
+                user_rating_3 = "star-rating-checked";
+                user_rating_4 = "star-rating-checked";
+                user_rating_5 = "";
+        
+            } else if(total_rating >= 5) {
+        
+                user_rating_1 = "star-rating-checked";
+                user_rating_2 = "star-rating-checked";
+                user_rating_3 = "star-rating-checked";
+                user_rating_4 = "star-rating-checked";
+                user_rating_5 = "star-rating-checked";
+        
+            }
 
         }
 
@@ -113,7 +183,7 @@ export async function product_page() {
         }
 
         html += buildRichProdView(products, c, user_rating_1,user_rating_2,
-            user_rating_3,user_rating_4,user_rating_5,total_rating,c,stock_state);
+            user_rating_3,user_rating_4,user_rating_5,total_rating,c,stock_state,is_user_logged);
 
             root.innerHTML = html;
 
@@ -146,129 +216,133 @@ export async function product_page() {
         })
     }
 
-    document.getElementById('form-create-comment').addEventListener('submit', async e => {
-        e.preventDefault();
-      
-            const comment = {};
+    if(is_user_logged) {
 
-            comment.productId = c;
-            const date = new Date();
-            comment.date = date.getDate() + ' / ' + date.getMonth() + ' / ' + date.getFullYear() + '   at ' + date.getHours() + ' : ' + date.getMinutes(),
+        document.getElementById('form-create-comment').addEventListener('submit', async e => {
+            e.preventDefault();
+        
+                const comment = {};
 
-            comment.name = e.target.name.value.trim();
-            comment.comment = e.target.comment.value.trim();
+                comment.productId = c;
+                const date = new Date();
+                comment.date = date.getDate() + ' / ' + date.getMonth() + ' / ' + date.getFullYear() + '   at ' + date.getHours() + ' : ' + date.getMinutes(),
 
-           // console.log(comment);
-            
+                comment.name = e.target.name.value.trim();
+                comment.comment = e.target.comment.value.trim();
 
-            if (Object.keys(comment).length > 0) {
-
-                try {
-                    await createComment(comment);
-
-                    await buildCommentView(c);
-
-                } catch (e) {
-                    if (DEV) console.log(e);
-                    Util.info('Create Comment Error', JSON.stringify(e));
-                }
+            // console.log(comment);
                 
-            }
 
+                if (Object.keys(comment).length > 0) {
 
-           
+                    try {
+                        await createComment(comment);
 
-    });
+                        await buildCommentView(c);
 
-    document.getElementById('add_to_wishlist').addEventListener('click', async e => {
-          
-
-                try {
-                    await addToWishlist(currentUser.uid, c);
+                    } catch (e) {
+                        if (DEV) console.log(e);
+                        Util.info('Create Comment Error', JSON.stringify(e));
+                    }
                     
-                } catch (e) {
-                    if (DEV) console.log(e);
-                    Util.info('Add To Wishlist Error', JSON.stringify(e));
                 }
-                
+
+
             
 
-    });
+        });
 
-    document.getElementById('rating-1').addEventListener('click', async e => {
-          
-        const rating_value = 1;
+        document.getElementById('add_to_wishlist').addEventListener('click', async e => {
+            
 
+                    try {
+                        await addToWishlist(currentUser.uid, c);
+                        
+                    } catch (e) {
+                        if (DEV) console.log(e);
+                        Util.info('Add To Wishlist Error', JSON.stringify(e));
+                    }
+                    
+                
 
-        try {
-            await addToRatings(currentUser.uid, c, rating_value);
-            await product_page();
-        } catch (e) {
-            if (DEV) console.log(e);
-            Util.info('Add To Ratings Error', JSON.stringify(e));
-        }
-        
-    });
+        });
 
-    document.getElementById('rating-2').addEventListener('click', async e => {
-          
-        const rating_value = 2;
-
-
-        try {
-            await addToRatings(currentUser.uid, c, rating_value);
-            await product_page();
-        } catch (e) {
-            if (DEV) console.log(e);
-            Util.info('Add To Ratings Error', JSON.stringify(e));
-        }
-        
-    });
-
-    document.getElementById('rating-3').addEventListener('click', async e => {
-          
-        const rating_value = 3;
+        document.getElementById('rating-1').addEventListener('click', async e => {
+            
+            const rating_value = 1;
 
 
-        try {
-            await addToRatings(currentUser.uid, c, rating_value);
-            await product_page();
-        } catch (e) {
-            if (DEV) console.log(e);
-            Util.info('Add To Ratings Error', JSON.stringify(e));
-        }
-        
-    });
+            try {
+                await addToRatings(currentUser.uid, c, rating_value);
+                await product_page();
+            } catch (e) {
+                if (DEV) console.log(e);
+                Util.info('Add To Ratings Error', JSON.stringify(e));
+            }
+            
+        });
 
-    document.getElementById('rating-4').addEventListener('click', async e => {
-          
-        const rating_value = 4;
-
-
-        try {
-            await addToRatings(currentUser.uid, c, rating_value);
-            await product_page();
-        } catch (e) {
-            if (DEV) console.log(e);
-            Util.info('Add To Ratings Error', JSON.stringify(e));
-        }
-        
-    });
-
-    document.getElementById('rating-5').addEventListener('click', async e => {
-          
-        const rating_value = 5;
+        document.getElementById('rating-2').addEventListener('click', async e => {
+            
+            const rating_value = 2;
 
 
-        try {
-            await addToRatings(currentUser.uid, c, rating_value);
-            await product_page();
-        } catch (e) {
-            if (DEV) console.log(e);
-            Util.info('Add To Ratings Error', JSON.stringify(e));
-        }
-        
-    });
+            try {
+                await addToRatings(currentUser.uid, c, rating_value);
+                await product_page();
+            } catch (e) {
+                if (DEV) console.log(e);
+                Util.info('Add To Ratings Error', JSON.stringify(e));
+            }
+            
+        });
+
+        document.getElementById('rating-3').addEventListener('click', async e => {
+            
+            const rating_value = 3;
+
+
+            try {
+                await addToRatings(currentUser.uid, c, rating_value);
+                await product_page();
+            } catch (e) {
+                if (DEV) console.log(e);
+                Util.info('Add To Ratings Error', JSON.stringify(e));
+            }
+            
+        });
+
+        document.getElementById('rating-4').addEventListener('click', async e => {
+            
+            const rating_value = 4;
+
+
+            try {
+                await addToRatings(currentUser.uid, c, rating_value);
+                await product_page();
+            } catch (e) {
+                if (DEV) console.log(e);
+                Util.info('Add To Ratings Error', JSON.stringify(e));
+            }
+            
+        });
+
+        document.getElementById('rating-5').addEventListener('click', async e => {
+            
+            const rating_value = 5;
+
+
+            try {
+                await addToRatings(currentUser.uid, c, rating_value);
+                await product_page();
+            } catch (e) {
+                if (DEV) console.log(e);
+                Util.info('Add To Ratings Error', JSON.stringify(e));
+            }
+            
+        });
+
+    }
 
 
 }
@@ -320,7 +394,9 @@ async function buildCommentView(c) {
 
 function buildRichProdView(product, index, 
     user_rating_1,user_rating_2,user_rating_3,
-    user_rating_4,user_rating_5,total_rating,c,stock_state) {
+    user_rating_4,user_rating_5,total_rating,c,stock_state,is_user_logged) {
+
+        
 
     return  `
 
@@ -433,7 +509,7 @@ function buildRichProdView(product, index,
 
                                                 <div class="col-lg-12">
                                                     <textarea name="comment" placeholder="Your  Comment*"></textarea>
-                                                    <button class="submit" type="submit">Comment</button>
+                                                    <button class="submit" type="submit" ${is_user_logged ? "" : "disabled"}>Comment</button>
                                                 </div>
                                             </div>
                                         </form>
