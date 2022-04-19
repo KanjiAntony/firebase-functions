@@ -173,6 +173,30 @@ export async function getSpecificProduct(prod_id) {
     return product;
 }
 
+export async function getSpecificProductStock(prod_id) { 
+
+    const q = doc(db, COLLECTION_NAMES.PRODUCT,prod_id);
+    const snapShot = await getDoc(q);
+
+    return snapShot.data().qty;
+}
+
+export async function updateSpecificProductStock(prod_id, qty) {
+
+    const docRef = doc(db, COLLECTION_NAMES.PRODUCT, prod_id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+
+        const prod_qty = docSnap.data().qty;
+
+        const updateInfo = {...prod_qty, qty};
+
+        await updateDoc(docRef, updateInfo);
+
+    }
+}
+
 export async function checkout(cart) {
     const data = cart.serialize(Date.now());
     //console.log(data);

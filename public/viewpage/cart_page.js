@@ -5,7 +5,7 @@ import { currentUser } from '../controller/firebase_auth.js';
 import { currency,disableButton,enableButton, info } from './util.js';
 import { home_page } from './home_page.js';
 import { DEV } from '../model/constants.js';
-import { checkout,getAccountPoints,getUserPromoValue, updateAccountPoints } from '../controller/firestore_controller.js';
+import { checkout,getAccountPoints,getSpecificProductStock,getUserPromoValue, updateAccountPoints, updateSpecificProductStock } from '../controller/firestore_controller.js';
 
 export function addEventListeners() {
     MENU.Cart.addEventListener('click', async () => {
@@ -41,6 +41,8 @@ export async function cart_page() {
 
     }
 
+    let product_stock;
+    let product_stock_left;
 
     html = `
     <table class="table">
@@ -172,6 +174,23 @@ export async function cart_page() {
         try{
             await checkout(cart);
             await updateAccountPoints(currentUser.uid,total_points);
+
+            cart.items.forEach(async item => {
+
+                try{
+        
+                    product_stock = await getSpecificProductStock(item.docId);
+        
+                    product_stock_left = product_stock - item.qty;
+        
+                    await updateSpecificProductStock(item.docId, product_stock_left);
+        
+                } catch(e) {
+                    if(DEV) console.log(e);
+                }
+        
+            });
+
             info('Success!','Checkout Complete!');
             cart.clear();
             MENU.CartItemCount.innerHTML = 0;
@@ -204,6 +223,23 @@ export async function cart_page() {
 
                 await checkout(cart);
                 await updateAccountPoints(currentUser.uid,final_points);
+
+                cart.items.forEach(async item => {
+
+                    try{
+            
+                        product_stock = await getSpecificProductStock(item.docId);
+            
+                        product_stock_left = product_stock - item.qty;
+            
+                        await updateSpecificProductStock(item.docId, product_stock_left);
+            
+                    } catch(e) {
+                        if(DEV) console.log(e);
+                    }
+            
+                });
+                
                 info('Success!','Checkout Complete!');
                 cart.clear();
                 MENU.CartItemCount.innerHTML = 0;
