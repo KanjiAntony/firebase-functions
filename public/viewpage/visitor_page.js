@@ -6,21 +6,21 @@ import { getProductList,getTotalRatings,getProductListBestSeller,getProductListH
 import { DEV } from '../model/constants.js';
 import { currentUser } from '../controller/firebase_auth.js';
 import { cart } from './cart_page.js';
-import { product_page } from "../viewpage/product_page.js"
+import { product_page } from "./product_page.js"
 
 
 export function addEventListeners() {
     MENU.Home.addEventListener('click', async () => {
         history.pushState(null, null, ROUTE_PATHNAMES.HOME);
         const label = Util.disableButton(MENU.Home);
-        await home_page();
+        await visitor_page();
         Util.enableButton(MENU.Home, label);
     });
 
     
 }
 
-export async function home_page() {
+export async function visitor_page() {
     
     let html = `<h1>Enjoy Shopping</h1>
     

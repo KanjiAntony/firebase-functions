@@ -3,7 +3,7 @@ import { ROUTE_PATHNAMES } from '../controller/route.js';
 import * as Util from './util.js';
 import {getProductList, createComment, getAllComments, 
     getSpecificProduct, addToWishlist, addToRatings,getUserRatings,
-    getTotalRatings,updateProductRating, getAccountCurrency } from '../controller/firestore_controller.js';
+    getTotalRatings,updateProductRating, getAccountCurrency, getSpecificProductStock } from '../controller/firestore_controller.js';
 import { DEV } from '../model/constants.js';
 import { currentUser } from '../controller/firebase_auth.js';
 import { cart } from './cart_page.js';
@@ -33,6 +33,8 @@ export async function product_page() {
     let user_rating_4 = "";
     let user_rating_5 = "";
     let total_rating;
+    let product_stock_left;
+    let stock_state = "";
     try {
         
 
@@ -42,6 +44,8 @@ export async function product_page() {
         total_rating = await getTotalRatings(currentUser.uid, c);
 
         await updateProductRating(total_rating, c);
+
+        product_stock_left = await getSpecificProductStock(c);
 
         if(user_rating == 0) {
 
@@ -93,7 +97,13 @@ export async function product_page() {
 
         }
 
-
+        if(product_stock_left < 1) {
+            stock_state = "Out of stock";
+        } else if(product_stock_left >= 1 && product_stock_left <=10) {
+            stock_state = product_stock_left+" remaining items";
+        } else if(product_stock_left > 10) {
+            stock_state = "In stock";
+        }
 
         if (cart && cart.getTotalQty() != 0) {
             cart.items.forEach(item => {
@@ -103,7 +113,7 @@ export async function product_page() {
         }
 
         html += buildRichProdView(products, c, user_rating_1,user_rating_2,
-            user_rating_3,user_rating_4,user_rating_5,total_rating,c);
+            user_rating_3,user_rating_4,user_rating_5,total_rating,c,stock_state);
 
             root.innerHTML = html;
 
@@ -113,13 +123,6 @@ export async function product_page() {
         if (DEV) console.log(e);
         Util.info('Failed to get the product list', JSON.stringify(e));
     }
-
-
-    
-
-    
-
-    
 
     const productForms = document.getElementsByClassName('form-product-qty');
     for (let i = 0; i < productForms.length; i++) {
@@ -317,7 +320,7 @@ async function buildCommentView(c) {
 
 function buildRichProdView(product, index, 
     user_rating_1,user_rating_2,user_rating_3,
-    user_rating_4,user_rating_5,total_rating,c) {
+    user_rating_4,user_rating_5,total_rating,c,stock_state) {
 
     return  `
 
@@ -366,7 +369,7 @@ function buildRichProdView(product, index,
                                             onclick="this.form.submitter='INC'">&plus;</button>
                                     </form>
 
-                                
+                                    <strong>${stock_state}</strong>
                                     
 
                                 </div>
