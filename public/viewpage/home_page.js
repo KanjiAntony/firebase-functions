@@ -2,7 +2,7 @@ import { MENU, root } from './elements.js';
 import { ROUTE_PATHNAMES } from '../controller/route.js';
 import * as Util from './util.js';
 import { getProductList,getTotalRatings,getProductListBestSeller,getProductListHighPrice,getProductListLowPrice,
-    updateAccountCurrency, getAccountCurrency, addToken } from '../controller/firestore_controller.js';
+    updateAccountCurrency, getAccountCurrency, addToken, getSpecificProductStock } from '../controller/firestore_controller.js';
 import { DEV } from '../model/constants.js';
 import { currentUser } from '../controller/firebase_auth.js';
 import { cart } from './cart_page.js';
@@ -63,21 +63,15 @@ export async function home_page() {
 
     `;
     let products;
+
+    console.log("Logged ",currentUser);
     
     root.innerHTML = html;
 
     try {
         products = await getProductList();
 
-        let global_curr = await getAccountCurrency(currentUser.uid);
-
-        if(global_curr == "USD") {
-            MENU.CurrencyChooser.value = "USD";
-        } else if(global_curr == "EUR") {
-            MENU.CurrencyChooser.value = "EUR";
-        } else if(global_curr == "") {
-            MENU.CurrencyChooser.value = "USD";
-        }
+        
 
         if (cart && cart.getTotalQty() != 0) {
             cart.items.forEach(item => {
@@ -95,26 +89,40 @@ export async function home_page() {
 
         document.getElementById("product_card_sec").innerHTML =product_view_card;
 
-        MENU.CurrencyChooser.addEventListener("change", async e => {
-
-            console.log(e.target.value);
-
-            if(e.target.value == "USD") {
+        if(currentUser != null) {
         
-                await updateAccountCurrency(currentUser.uid, "USD");
+                let global_curr = await getAccountCurrency(currentUser.uid);
+
+                if(global_curr == "USD") {
+                    MENU.CurrencyChooser.value = "USD";
+                } else if(global_curr == "EUR") {
+                    MENU.CurrencyChooser.value = "EUR";
+                } else if(global_curr == "") {
+                    MENU.CurrencyChooser.value = "USD";
+                }
+
+                MENU.CurrencyChooser.addEventListener("change", async e => {
+
+                    console.log(e.target.value);
+
+                    if(e.target.value == "USD") {
                 
-            } else if(e.target.value == "EUR") {
-    
-                await updateAccountCurrency(currentUser.uid, "EUR");
-    
-            }
-        
-        
-        });
+                        await updateAccountCurrency(currentUser.uid, "USD");
+                        
+                    } else if(e.target.value == "EUR") {
+            
+                        await updateAccountCurrency(currentUser.uid, "EUR");
+            
+                    }
+                
+                
+                });
 
-        let device_token = document.getElementById("message_token").innerHTML;
+                let device_token = document.getElementById("message_token").innerHTML;
 
-        await addToken(currentUser.uid,device_token);
+                await addToken(currentUser.uid,device_token);
+
+        }
 
     } catch (e) {
         if (DEV) console.log(e);
@@ -260,8 +268,14 @@ async function buildProductView(product, index) {
     let user_rating_5 = "";
     let total_rating;
 
+    let product_stock_left;
+    let stock_state = "";
+
     try {
-        total_rating = await getTotalRatings(currentUser.uid, product.docId);
+        total_rating = await getTotalRatings("", product.docId);
+
+        product_stock_left = await getSpecificProductStock(product.docId);
+        
 
         if(total_rating == 0) {
 
@@ -312,6 +326,14 @@ async function buildProductView(product, index) {
             user_rating_5 = "star-rating-checked";
     
         }
+
+        if(product_stock_left < 1) {
+            stock_state = "Out of stock";
+        } else if(product_stock_left >= 1 && product_stock_left <=10) {
+            stock_state = product_stock_left+" remaining items";
+        } else if(product_stock_left > 10) {
+            stock_state = "In stock";
+        }
     } catch(e) {
         if (DEV) console.log(e);
     }
@@ -355,6 +377,8 @@ async function buildProductView(product, index) {
                     <button class="btn btn-outline-danger" type="submit"
                         onclick="this.form.submitter='INC'">&plus;</button>
                 </form>
+                ${stock_state}
+
             </div>
         </div>
         </a>

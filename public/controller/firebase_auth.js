@@ -105,7 +105,7 @@ async function AuthStateChanged(user) {
         }
         const pathname = window.location.pathname;
         const hash = window.location.hash;
-        history.pushState(null, null, ROUTE_PATHNAMES.HOME);
+        //history.pushState(null, null, ROUTE_PATHNAMES.HOME);
         routing(pathname, hash);
     }
 }
