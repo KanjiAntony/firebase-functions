@@ -2,7 +2,7 @@ importScripts('https://www.gstatic.com/firebasejs/9.2.0/firebase-app-compat.js')
 importScripts('https://www.gstatic.com/firebasejs/9.2.0/firebase-messaging-compat.js');
 
 firebase.initializeApp({
-      apiKey: "AIzaSyAXT9zPMKtretOdqph7xCUS8oeMsNTcZAQ",
+      apiKey: "",
 
       authDomain: "kanji-functions.firebaseapp.com",
 
@@ -10,9 +10,9 @@ firebase.initializeApp({
 
       storageBucket: "kanji-functions.appspot.com",
 
-      messagingSenderId: "137802058635",
+      messagingSenderId: "",
 
-      appId: "1:137802058635:web:2897b394fc76d73f79bd8e"
+      appId: ""
 
   });
 
